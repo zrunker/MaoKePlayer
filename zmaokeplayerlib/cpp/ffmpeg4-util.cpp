@@ -4,7 +4,7 @@
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_cc_ibooker_android_zmaokeplayerlib_FFmpeg4Util_reMuxer(JNIEnv *env, jclass clazz,
+Java_cc_ibooker_android_zmaokeplayerlib_MaoKePlayerUtil_reMuxer(JNIEnv *env, jclass clazz,
                                                             jstring in_path, jstring out_path) {
     // 获取文件地址指针 - Java的String转为C的字符串
     const char *inPath = env->GetStringUTFChars(in_path, nullptr);

@@ -5,7 +5,7 @@ package cc.ibooker.android.zmaokeplayerlib;
  *
  * @author 邹峰立
  */
-public class FFmpeg4Util {
+public class MaoKePlayerUtil {
     static {
         System.loadLibrary("ffmpeg4-util");
     }
