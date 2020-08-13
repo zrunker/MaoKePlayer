@@ -17,8 +17,13 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ""
-                // 设置生成指定ABI版本的so库，NDK-17之后不再支持'armeabi', 'mips', 'mips64'
-                abiFilters 'armeabi-v7a'//, 'armeabi', 'mips', 'mips64'
+                abiFilters 'armeabi-v7a'
+            }
+        }
+
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ['src/main/jniLibs']
             }
         }
     }
@@ -29,13 +34,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     externalNativeBuild {
         cmake {
-            path "cpp/CMakeLists.txt"
+            path "src/main/cpp/CMakeLists.txt"
             version "3.10.2"
         }
     }
-
 }
 
 dependencies {
