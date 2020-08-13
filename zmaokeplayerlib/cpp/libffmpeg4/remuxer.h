@@ -15,10 +15,11 @@ int main_muxer(const char *inPath, const char *outPath) {
     // 压缩数据
     AVPacket avPacket = NULL;
 
-    const char *pathIn, *pathOut = nullptr;
+    const char *pathIn, *pathOut;
 
     int ret;
     pathIn = inPath;
+    pathOut = outPath;
 
     // 打开一个输入流，并且读取其文件头。编解码器没有打开。
     if ((ret = avformat_open_input(&in_avfmt_ctx, pathIn, 0, 0)) < 0) {
@@ -128,90 +129,90 @@ int main_muxer(const char *inPath, const char *outPath) {
             fprintf(stderr, "Could not open output file '%s'", pathOut);
             goto end;
         }
+    }
 
-        // 初始化流的私有数据并将流头写入输出媒体文件
-        ret = avformat_write_header(out_avfmt_ctx, NULL);
+    // 初始化流的私有数据并将流头写入输出媒体文件
+    ret = avformat_write_header(out_avfmt_ctx, NULL);
+    if (ret < 0) {
+        fprintf(stderr, "Error occurred when opening output file\n");
+        goto end;
+    }
+
+    while (true) {
+        AVStream *outS, *inS;
+        /**
+         * 返回流的下一帧。
+         * 此函数读取存储在文件中的内容到AVPacket *pkt，而不验证是否存在解码器的有效帧。
+         * 它将*存储在文件中的内容分割成帧，并为每个调用返回一个AVPacket *pkt。
+         * 它不会*省略有效帧之间的无效数据，以便给解码器最大的解码信息。
+         * 返回0表示读取一帧成功，返回负数，表示出错了或者已经读到文件末尾了。
+         */
+        ret = av_read_frame(in_avfmt_ctx, &avPacket);
+        if (ret < 0)
+            break;
+
+        // 初始化输入的AVStream，AVpacket 中的stream_index定义了流的索引
+        inS = in_avfmt_ctx->streams[avPacket.stream_index];
+        // 初始化输出的AVStream
+        outS = out_avfmt_ctx->streams[avPacket.stream_index];
+
+        /**
+         * pkt.pts **乘** in_stream->time_base **除** out_stream->time_base
+         * 得到out_stream下pkt的pts，输出文件的一帧数据包的pts
+         * 即同步了输入输出的显示时间戳
+         * pkt为从输入文件读取的一帧的数据包，
+         */
+        avPacket.pts = av_rescale_q_rnd(avPacket.pts, inS->time_base, outS->time_base,
+                                        AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
+
+        /**
+         * pkt.dts  **乘** in_stream->time_base **除** out_stream->time_base
+         * 得到out_stream下pkt的dts ，输出文件的一帧数据包的dts
+         * 即同步了输入输出的解压时间戳
+         * pkt为从输入文件读取的一帧的数据包，
+         */
+        avPacket.dts = av_rescale_q_rnd(avPacket.dts, inS->time_base, outS->time_base,
+                                        AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
+
+        /**
+         * pkt.duration**乘** in_stream->time_base **除** out_stream->time_base
+         * 得到out_stream下pkt的duration ，输出文件的一帧数据包的持续时间
+         * 即同步了输入输出的持续时间戳
+         * pkt为从输入文件读取的一帧的数据包，
+         */
+        avPacket.duration = av_rescale_q(avPacket.duration, inS->time_base, outS->time_base);
+
+        /**
+         * 将一帧数据包写入输出媒体文件。
+         * 此函数将根据需要在内部缓冲数据包，以确保输出文件中的数据包按照dts的顺序正确交叉存储。
+         * 调用者进行自己的交叉存储时，应该调用av_write_frame()，而不是这个函数。
+         * 使用此函数而不是av_write_frame()可以使muxers提前了解未来的数据包，例如改善MP4对VFR内容在碎片模式下的行为。
+         */
+        ret = av_interleaved_write_frame(out_avfmt_ctx, &avPacket);
         if (ret < 0) {
-            fprintf(stderr, "Error occurred when opening output file\n");
-            goto end;
+            fprintf(stderr, "Error muxing packet\n");
+            break;
         }
 
-        while (true) {
-            AVStream *outS, *inS;
-            /**
-             * 返回流的下一帧。
-             * 此函数读取存储在文件中的内容到AVPacket *pkt，而不验证是否存在解码器的有效帧。
-             * 它将*存储在文件中的内容分割成帧，并为每个调用返回一个AVPacket *pkt。
-             * 它不会*省略有效帧之间的无效数据，以便给解码器最大的解码信息。
-             * 返回0表示读取一帧成功，返回负数，表示出错了或者已经读到文件末尾了。
-             */
-            ret = av_read_frame(in_avfmt_ctx, &avPacket);
-            if (ret < 0)
-                break;
+        // 清除packet占用的内存
+        av_packet_unref(&avPacket);
+    }
+    // *将流的尾部写入输出媒体文件，并且释放其私有数据占用的内存
+    av_write_trailer(out_avfmt_ctx);
 
-            // 初始化输入的AVStream，AVpacket 中的stream_index定义了流的索引
-            inS = in_avfmt_ctx->streams[avPacket.stream_index];
-            // 初始化输出的AVStream
-            outS = out_avfmt_ctx->streams[avPacket.stream_index];
+    end:
+    // 关闭打开的input AVFormatContext。释放其所有内容占用的内存，赋值为NULL。
+    avformat_close_input(&in_avfmt_ctx);
+    /* close output */
+    if (out_avfmt_ctx && !(avOutFmt->flags & AVFMT_NOFILE)) {
+        // 关闭被AVIOContext使用的资源，释放AVIOContext占用的内存并且置为NULL
+        avio_closep(&out_avfmt_ctx->pb);
+    }
+    // 释输出的放AVFormatContext所有占用的内存
+    avformat_free_context(out_avfmt_ctx);
 
-            /**
-             * pkt.pts **乘** in_stream->time_base **除** out_stream->time_base
-             * 得到out_stream下pkt的pts，输出文件的一帧数据包的pts
-             * 即同步了输入输出的显示时间戳
-             * pkt为从输入文件读取的一帧的数据包，
-             */
-            avPacket.pts = av_rescale_q_rnd(avPacket.pts, inS->time_base, outS->time_base,
-                                            AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
-
-            /**
-             * pkt.dts  **乘** in_stream->time_base **除** out_stream->time_base
-             * 得到out_stream下pkt的dts ，输出文件的一帧数据包的dts
-             * 即同步了输入输出的解压时间戳
-             * pkt为从输入文件读取的一帧的数据包，
-             */
-            avPacket.dts = av_rescale_q_rnd(avPacket.dts, inS->time_base, outS->time_base,
-                                            AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
-
-            /**
-             * pkt.duration**乘** in_stream->time_base **除** out_stream->time_base
-             * 得到out_stream下pkt的duration ，输出文件的一帧数据包的持续时间
-             * 即同步了输入输出的持续时间戳
-             * pkt为从输入文件读取的一帧的数据包，
-             */
-            avPacket.duration = av_rescale_q(avPacket.duration, inS->time_base, outS->time_base);
-
-            /**
-             * 将一帧数据包写入输出媒体文件。
-             * 此函数将根据需要在内部缓冲数据包，以确保输出文件中的数据包按照dts的顺序正确交叉存储。
-             * 调用者进行自己的交叉存储时，应该调用av_write_frame()，而不是这个函数。
-             * 使用此函数而不是av_write_frame()可以使muxers提前了解未来的数据包，例如改善MP4对VFR内容在碎片模式下的行为。
-             */
-            ret = av_interleaved_write_frame(out_avfmt_ctx, &avPacket);
-            if (ret < 0) {
-                fprintf(stderr, "Error muxing packet\n");
-                break;
-            }
-
-            // 清除packet占用的内存
-            av_packet_unref(&avPacket);
-        }
-        // *将流的尾部写入输出媒体文件，并且释放其私有数据占用的内存
-        av_write_trailer(out_avfmt_ctx);
-
-        end:
-        // 关闭打开的input AVFormatContext。释放其所有内容占用的内存，赋值为NULL。
-        avformat_close_input(&in_avfmt_ctx);
-        /* close output */
-        if (out_avfmt_ctx && !(avOutFmt->flags & AVFMT_NOFILE)) {
-            // 关闭被AVIOContext使用的资源，释放AVIOContext占用的内存并且置为NULL
-            avio_closep(&out_avfmt_ctx->pb);
-        }
-        // 释输出的放AVFormatContext所有占用的内存
-        avformat_free_context(out_avfmt_ctx);
-
-        if (ret < 0 && ret != AVERROR_EOF) {
-            return 1;
-        }
+    if (ret < 0 && ret != AVERROR_EOF) {
+        return 1;
     }
     return 0;
 }
