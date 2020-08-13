@@ -13,7 +13,7 @@ int main_muxer(const char *inPath, const char *outPath) {
     // 输出文件格式
     AVOutputFormat *avOutFmt = nullptr;
     // 压缩数据
-    AVPacket avPacket = NULL;
+    AVPacket avPacket;
 
     const char *pathIn, *pathOut;
 
@@ -163,7 +163,7 @@ int main_muxer(const char *inPath, const char *outPath) {
          * pkt为从输入文件读取的一帧的数据包，
          */
         avPacket.pts = av_rescale_q_rnd(avPacket.pts, inS->time_base, outS->time_base,
-                                        AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
+                                        static_cast<AVRounding>(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
 
         /**
          * pkt.dts  **乘** in_stream->time_base **除** out_stream->time_base
@@ -172,7 +172,7 @@ int main_muxer(const char *inPath, const char *outPath) {
          * pkt为从输入文件读取的一帧的数据包，
          */
         avPacket.dts = av_rescale_q_rnd(avPacket.dts, inS->time_base, outS->time_base,
-                                        AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
+                                        static_cast<AVRounding>(AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX));
 
         /**
          * pkt.duration**乘** in_stream->time_base **除** out_stream->time_base
@@ -197,6 +197,7 @@ int main_muxer(const char *inPath, const char *outPath) {
         // 清除packet占用的内存
         av_packet_unref(&avPacket);
     }
+
     // *将流的尾部写入输出媒体文件，并且释放其私有数据占用的内存
     av_write_trailer(out_avfmt_ctx);
 
