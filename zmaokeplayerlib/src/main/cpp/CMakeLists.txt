@@ -19,7 +19,7 @@ add_library(
         SHARED
         IMPORTED
 )
-#给avcodec这个变量赋值
+#给libavcodec这个变量赋值
 set_target_properties(libavcodec PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libavcodec.so)
 
 #2.libavdevice
@@ -70,7 +70,7 @@ add_library(
 )
 set_target_properties(libswscale PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libswscale.so)
 
-#将FFmpeg相关混合编译到ffmpeg4-util中
+#将FFmpeg相关混合编译到muxer-util中
 target_link_libraries(
         muxer-util
 
