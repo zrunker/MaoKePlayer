@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import cc.ibooker.android.zmaokeplayerlib.MaoKePlayerUtil;
+import cc.ibooker.android.zmaokeplayerlib.MaoKeMuxerUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,6 +13,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MaoKePlayerUtil.reMuxer("", "");
+        MaoKeMuxerUtil.reMuxer("", "");
     }
 }

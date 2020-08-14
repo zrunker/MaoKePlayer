@@ -5,15 +5,15 @@ include_directories(
         include #因为和CMakeLists.txt在同一级，所以直接写include
 )
 
-add_library(ffmpeg4-util
+add_library(muxer-util
         SHARED
-        ffmpeg4-util.cpp)
+        muxer-util.cpp)
 
 find_library(
         log-lib
         log)
 
-#1.定义一个变量avcodec
+#1.libavcodec
 add_library(
         libavcodec
         SHARED
@@ -22,7 +22,7 @@ add_library(
 #给avcodec这个变量赋值
 set_target_properties(libavcodec PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libavcodec.so)
 
-#2.
+#2.libavdevice
 add_library(
         libavdevice
         SHARED
@@ -30,7 +30,7 @@ add_library(
 )
 set_target_properties(libavdevice PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libavdevice.so)
 
-#3.
+#3.libavfilter
 add_library(
         libavfilter
         SHARED
@@ -38,7 +38,7 @@ add_library(
 )
 set_target_properties(libavfilter PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libavfilter.so)
 
-#4.
+#4.libavformat
 add_library(
         libavformat
         SHARED
@@ -46,7 +46,7 @@ add_library(
 )
 set_target_properties(libavformat PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libavformat.so)
 
-#5.
+#5.libavutil
 add_library(
         libavutil
         SHARED
@@ -54,7 +54,7 @@ add_library(
 )
 set_target_properties(libavutil PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libavutil.so)
 
-#7.
+#7.libswresample
 add_library(
         libswresample
         SHARED
@@ -62,7 +62,7 @@ add_library(
 )
 set_target_properties(libswresample PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libswresample.so)
 
-#8.
+#8.libswscale
 add_library(
         libswscale
         SHARED
@@ -70,15 +70,16 @@ add_library(
 )
 set_target_properties(libswscale PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/../../main/jniLibs/${ANDROID_ABI}/libswscale.so)
 
-#将avcodec混合编译到ffmpeg4-util中
+#将FFmpeg相关混合编译到ffmpeg4-util中
 target_link_libraries(
-        ffmpeg4-util
+        muxer-util
+
         ${log-lib}
-        libavcodec #1
-        libavdevice #2
-        libavfilter #3
-        libavformat #4
-        libavutil #5
-        libswresample #7
-        libswscale #8
-)
+
+        libavcodec
+        libavdevice
+        libavfilter
+        libavformat
+        libavutil
+        libswresample
+        libswscale)
