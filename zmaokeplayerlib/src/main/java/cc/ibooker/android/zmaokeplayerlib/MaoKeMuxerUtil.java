@@ -7,7 +7,7 @@ package cc.ibooker.android.zmaokeplayerlib;
  */
 public class MaoKeMuxerUtil {
     static {
-        System.loadLibrary("ffmpeg4-util");
+        System.loadLibrary("muxer-util");
     }
 
     /**
