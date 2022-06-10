@@ -60,8 +60,8 @@ public class MKMediaView extends SurfaceView
         super(context, attrs, defStyleAttr);
         TypedArray typedArr = context.obtainStyledAttributes(attrs, R.styleable.MKMediaView);
         isZOrderOnTop = typedArr.getBoolean(R.styleable.MKMediaView_isZOrderOnTop, false);
-        isAutoSize = typedArr.getBoolean(R.styleable.MKMediaView_isAutoSize, false);
-        isKeepScreenOn = typedArr.getBoolean(R.styleable.MKMediaView_isKeepScreenOn, false);
+        isAutoSize = typedArr.getBoolean(R.styleable.MKMediaView_isAutoSize, true);
+        isKeepScreenOn = typedArr.getBoolean(R.styleable.MKMediaView_isKeepScreenOn, true);
         typedArr.recycle();
 
         // 初始化

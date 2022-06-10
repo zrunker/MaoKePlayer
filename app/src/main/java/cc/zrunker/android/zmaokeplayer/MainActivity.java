@@ -23,6 +23,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
-        mkVideoView.play("https://s17.aconvert.com/convert/p3r68-cdx67/lidfd-3xc80.mp4");
+        mkVideoView.play("https://s33.aconvert.com/convert/p3r68-cdx67/knd58-i47b7.mp4");
     }
 }
