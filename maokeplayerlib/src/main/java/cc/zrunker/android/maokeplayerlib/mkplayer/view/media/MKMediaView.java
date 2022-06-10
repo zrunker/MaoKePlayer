@@ -120,6 +120,7 @@ public class MKMediaView extends SurfaceView
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         isCanPlay = false;
+        setDisplay(null);
         if (isPlaying()) {
             pause();
         }

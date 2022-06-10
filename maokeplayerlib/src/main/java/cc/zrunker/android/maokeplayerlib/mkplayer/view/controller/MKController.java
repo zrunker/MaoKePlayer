@@ -197,6 +197,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
                     resetCurrentD();
+                    updatePausePlay(mkMediaView.isPlaying());
                 }
 
                 @Override
@@ -206,7 +207,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    pause();
+
                 }
             });
             mkMediaView.setOnErrorListener(new MKErrorListener() {
