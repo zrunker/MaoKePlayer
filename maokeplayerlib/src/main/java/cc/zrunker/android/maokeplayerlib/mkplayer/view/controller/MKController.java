@@ -271,6 +271,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
         if (mHandler == null) {
             mHandler = new ZDelayHandler(this);
         }
+        mHandler.removeCallbacksAndMessages(null);
         Message message = Message.obtain();
         message.what = DELAY_WHAT;
         mHandler.sendMessageDelayed(message, 1000);
