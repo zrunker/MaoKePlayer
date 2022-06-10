@@ -361,10 +361,10 @@ public class MKController extends FrameLayout implements View.OnClickListener {
      */
     public interface OnControllerListener {
         // 上一个
-        void onSkipPrevious(MKMediaView MKMediaView);
+        void onSkipPrevious(MKMediaView mkMediaView);
 
         // 下一个
-        void onSkipNext(MKMediaView MKMediaView);
+        void onSkipNext(MKMediaView mkMediaView);
 
         // 快退
         void onFastRewind();
