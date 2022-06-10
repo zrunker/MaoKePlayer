@@ -53,7 +53,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
     private TextView tvBrightnessVolume;
 
     private ZDelayHandler mHandler;
-    private final int delayWhat = 110;
+    private final int DELAY_WHAT = 110;
 
     private static class ZDelayHandler extends Handler {
         private final WeakReference<MKController> mWeakRef;
@@ -68,7 +68,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
             MKController mkController = mWeakRef.get();
             if (mkController != null
                     && mkController.mkMediaView != null
-                    && msg.what == mkController.delayWhat) {
+                    && msg.what == mkController.DELAY_WHAT) {
                 long cPosition = mkController.mkMediaView.getCurrentPosition();
                 mkController.tvCurrentD.setText(mkController.longToTime(cPosition));
                 mkController.sbProgress.setProgress((int) cPosition);
@@ -198,6 +198,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
                 public void surfaceCreated(SurfaceHolder holder) {
                     resetCurrentD();
                     updatePausePlay(mkMediaView.isPlaying());
+                    openUpdateUiHandler();
                 }
 
                 @Override
@@ -271,7 +272,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
             mHandler = new ZDelayHandler(this);
         }
         Message message = Message.obtain();
-        message.what = delayWhat;
+        message.what = DELAY_WHAT;
         mHandler.sendMessageDelayed(message, 1000);
     }
 
