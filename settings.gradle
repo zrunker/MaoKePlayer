@@ -1,2 +1,2 @@
-include ':app', ':zmaokeplayerlib'
+include ':app'
 rootProject.name='ZMaoKePlayer'
