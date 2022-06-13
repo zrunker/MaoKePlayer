@@ -17,7 +17,6 @@ import android.view.View;
 import java.util.HashSet;
 import java.util.Set;
 
-import cc.zrunker.android.maokeplayerlib.mkplayer.utils.DensityUtil;
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.AudioData;
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.FFTData;
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.BarGraphRenderer;
@@ -25,6 +24,7 @@ import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.Circ
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.CircleRenderer;
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.LineRenderer;
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.Renderer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.utils.DensityUtil;
 
 
 /**
@@ -38,6 +38,10 @@ public class VisualizerView extends View {
     private final Rect mRect = new Rect();
 
     private Set<Renderer> mRenderers;
+
+    public boolean isAddRenderer() {
+        return mRenderers != null && mRenderers.size() > 0;
+    }
 
 //    private Paint mFadePaint = new Paint();
 

@@ -49,9 +49,10 @@ public class AudioExecutor {
     public AudioExecutor(Context context, VisualizerView visualizerView) {
         this.context = context;
         this.visualizerView = visualizerView;
-//        if (visualizerView != null) {
-//            visualizerView.addCircleRenderer();
-//        }
+        if (visualizerView != null && !visualizerView.isAddRenderer()) {
+            // 添加默认Renderer
+            visualizerView.addCircleRenderer();
+        }
         init();
     }
 
@@ -79,7 +80,7 @@ public class AudioExecutor {
     }
 
     // 获取AudioManager
-    public AudioManager getAudioManager() {
+    private AudioManager getAudioManager() {
         if (audioManager == null) {
             audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         }
@@ -206,7 +207,7 @@ public class AudioExecutor {
         } catch (Exception e) {
             e.printStackTrace();
             if (mkPlayerListener != null) {
-                mkPlayerListener.onError(mkPlayer, 0, 0);
+                mkPlayerListener.onError(mkPlayer, 0, 0, e.getMessage());
             }
         }
         return this;
@@ -316,7 +317,7 @@ public class AudioExecutor {
             @Override
             public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
                 if (mkPlayerListener != null) {
-                    mkPlayerListener.onError(mkPlayer, what, extra);
+                    mkPlayerListener.onError(mkPlayer, what, extra, error);
                 }
                 mkPlayer.pause();
                 mkPlayer.stop();
@@ -443,7 +444,7 @@ public class AudioExecutor {
     /**
      * 初始化Visualizer
      */
-    public void initVisualizer() {
+    private void initVisualizer() {
         try {
             if (mkPlayer != null) {
                 visualizerDestroy();
@@ -469,15 +470,15 @@ public class AudioExecutor {
 
     // 对外监听接口
     public interface MKPlayerListener {
-        boolean onError(MKPlayer MKPlayer, int i, int i1);
+        boolean onError(MKPlayer mkPlayer, int i, int i1, String error);
 
-        void onCompletion(MKPlayer MKPlayer);
+        void onCompletion(MKPlayer mkPlayer);
 
-        void onPrepared(MKPlayer MKPlayer);
+        void onPrepared(MKPlayer mkPlayer);
 
-        void onSeekComplete(MKPlayer MKPlayer);
+        void onSeekComplete(MKPlayer mkPlayer);
 
-        void onBufferingUpdate(MKPlayer MKPlayer, int i);
+        void onBufferingUpdate(MKPlayer mkPlayer, int i);
 
         void onFftDataCapture(Visualizer visualizer, final byte[] fft, int samplingRate);
 
