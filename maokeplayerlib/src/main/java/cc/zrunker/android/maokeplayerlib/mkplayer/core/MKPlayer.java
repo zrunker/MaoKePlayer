@@ -230,4 +230,12 @@ public class MKPlayer implements IMKPlayer {
         }
         return 0;
     }
+
+    @Override
+    public int getAudioSessionId() {
+        if (mediaPlayer != null) {
+            return mediaPlayer.getAudioSessionId();
+        }
+        return 0;
+    }
 }

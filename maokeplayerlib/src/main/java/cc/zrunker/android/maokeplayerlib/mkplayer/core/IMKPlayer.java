@@ -126,4 +126,9 @@ public interface IMKPlayer {
      * 采样长宽比:num / den
      */
     int getVideoSarDen();
+
+    /**
+     * 获取Audio Session ID
+     */
+    int getAudioSessionId();
 }
