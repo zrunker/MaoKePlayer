@@ -1,4 +1,4 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.entity;
+package cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity;
 
 // Data class to explicitly indicate that these bytes are raw audio data
 public class AudioData {

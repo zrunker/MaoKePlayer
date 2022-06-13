@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <cc.zrunker.android.maokeplayerlib.mkplayer.view.MKVideoView
+    <cc.zrunker.android.maokeplayerlib.mkplayer.video.MKVideoView
         android:id="@+id/mkVideo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

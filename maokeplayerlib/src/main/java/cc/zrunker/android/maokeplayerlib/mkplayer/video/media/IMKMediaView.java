@@ -1,4 +1,4 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.view.media;
+package cc.zrunker.android.maokeplayerlib.mkplayer.video.media;
 
 import android.view.SurfaceHolder;
 

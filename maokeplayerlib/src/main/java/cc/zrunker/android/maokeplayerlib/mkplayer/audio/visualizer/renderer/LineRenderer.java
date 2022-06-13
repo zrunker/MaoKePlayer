@@ -1,12 +1,12 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.renderer;
+package cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.entity.AudioData;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.entity.FFTData;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.AudioData;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.FFTData;
 
 public class LineRenderer extends Renderer {
     private final Paint mPaint;

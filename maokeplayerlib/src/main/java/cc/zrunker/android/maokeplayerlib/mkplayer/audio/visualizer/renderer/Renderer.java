@@ -1,10 +1,10 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.renderer;
+package cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.entity.AudioData;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.entity.FFTData;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.AudioData;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.FFTData;
 
 abstract public class Renderer {
     // Have these as members, so we don't have to re-create them each time

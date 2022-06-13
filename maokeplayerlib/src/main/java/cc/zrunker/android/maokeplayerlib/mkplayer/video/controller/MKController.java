@@ -1,4 +1,4 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.view.controller;
+package cc.zrunker.android.maokeplayerlib.mkplayer.video.controller;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -29,7 +29,7 @@ import java.lang.ref.WeakReference;
 
 import cc.zrunker.android.maokeplayerlib.R;
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import cc.zrunker.android.maokeplayerlib.mkplayer.view.media.MKMediaView;
+import cc.zrunker.android.maokeplayerlib.mkplayer.video.media.MKMediaView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**

@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <cc.zrunker.android.maokeplayerlib.mkplayer.view.media.MKMediaView
+    <cc.zrunker.android.maokeplayerlib.mkplayer.video.media.MKMediaView
         android:id="@+id/media_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.view;
+package cc.zrunker.android.maokeplayerlib.mkplayer.video;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,8 +10,8 @@ import android.widget.ProgressBar;
 import cc.zrunker.android.maokeplayerlib.R;
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.ErrorTrans;
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import cc.zrunker.android.maokeplayerlib.mkplayer.view.controller.MKController;
-import cc.zrunker.android.maokeplayerlib.mkplayer.view.media.MKMediaView;
+import cc.zrunker.android.maokeplayerlib.mkplayer.video.controller.MKController;
+import cc.zrunker.android.maokeplayerlib.mkplayer.video.media.MKMediaView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**

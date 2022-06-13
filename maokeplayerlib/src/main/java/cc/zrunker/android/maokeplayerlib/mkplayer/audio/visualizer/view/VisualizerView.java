@@ -1,4 +1,4 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.view;
+package cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,13 +18,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cc.zrunker.android.maokeplayerlib.mkplayer.utils.DensityUtil;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.entity.AudioData;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.entity.FFTData;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.renderer.BarGraphRenderer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.renderer.CircleBarRenderer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.renderer.CircleRenderer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.renderer.LineRenderer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.renderer.Renderer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.AudioData;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.entity.FFTData;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.BarGraphRenderer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.CircleBarRenderer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.CircleRenderer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.LineRenderer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.renderer.Renderer;
 
 
 /**

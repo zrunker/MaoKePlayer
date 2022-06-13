@@ -140,7 +140,7 @@ MKMediaView是基于SurfaceView用来呈现视频渲染结果，此View不包含
 **使用：**
 1. 在布局中添加MKMediaView：
 ```
-<cc.zrunker.android.maokeplayerlib.mkplayer.view.media.MKMediaView
+<cc.zrunker.android.maokeplayerlib.mkplayer.video.media.MKMediaView
     android:id="@+id/media_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -160,7 +160,7 @@ MKVideoView是针对于视频播放，在MKMediaView的基础上进行了包装�
 **使用：**
 1. 在布局中添加MKVideoView：
 ```
-<cc.zrunker.android.maokeplayerlib.mkplayer.view.MKVideoView
+<cc.zrunker.android.maokeplayerlib.mkplayer.video.MKVideoView
     android:id="@+id/mkVideo"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -178,7 +178,7 @@ mkVideoView.setOnErrorListener(new MKErrorListener() {
 mkVideoView.play("视频地址");
 ```
 
-关于视频控制器，详情可查看：`cc.zrunker.android.maokeplayerlib.mkplayer.view.controller.MKController`
+关于视频控制器，详情可查看：`cc.zrunker.android.maokeplayerlib.mkplayer.video.controller.MKController`
 
 效果图：![猫客影音播放器](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-10-153103.png)
 

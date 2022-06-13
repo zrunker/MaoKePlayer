@@ -6,7 +6,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import cc.zrunker.android.maokeplayerlib.mkplayer.view.MKVideoView;
+import cc.zrunker.android.maokeplayerlib.mkplayer.video.MKVideoView;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class MainActivity extends AppCompatActivity {

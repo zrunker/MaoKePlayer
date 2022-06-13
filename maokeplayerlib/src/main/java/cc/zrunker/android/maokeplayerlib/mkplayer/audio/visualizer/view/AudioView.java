@@ -1,4 +1,4 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.visualizer.view;
+package cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
