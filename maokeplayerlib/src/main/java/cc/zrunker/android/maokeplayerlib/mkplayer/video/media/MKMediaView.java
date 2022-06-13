@@ -3,12 +3,16 @@ package cc.zrunker.android.maokeplayerlib.mkplayer.video.media;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import cc.zrunker.android.maokeplayerlib.R;
@@ -193,6 +197,13 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
+    public void prepareAsync() {
+        if (isCanPlay) {
+            mkPlayer.prepareAsync();
+        }
+    }
+
+    @Override
     public void setDisplay(SurfaceHolder sHolder) {
         mkPlayer.setDisplay(sHolder);
     }
@@ -265,6 +276,32 @@ public class MKMediaView extends SurfaceView
     @Override
     public int getAudioSessionId() {
         return mkPlayer.getAudioSessionId();
+    }
+
+    @Override
+    public void setWakeMode(Context context, int level) {
+        mkPlayer.setWakeMode(context, level);
+    }
+
+    @Override
+    public void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        mkPlayer.setDataSource(context, uri);
+    }
+
+    @Override
+    public void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        mkPlayer.setDataSource(context, uri, map);
+    }
+
+    @Override
+    public void setDataSource(FileDescriptor fileDescriptor) throws IOException, IllegalArgumentException, IllegalStateException {
+        mkPlayer.setDataSource(fileDescriptor);
+    }
+
+    @Override
+    public void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        mediaPath = path;
+        mkPlayer.setDataSource(path);
     }
 
     @Override
