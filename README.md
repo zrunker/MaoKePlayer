@@ -139,7 +139,7 @@ public IMKOption getMkOption() {
 }
 ```
 
-## MKMediaView
+## MKMediaView（视频）
 MKMediaView是基于SurfaceView用来呈现视频渲染结果，此View不包含视频控制器，用户可以自行定制想要的控制器效果。
 
 **使用：**
@@ -159,7 +159,7 @@ MKMediaView mkMediaView = findViewById(R.id.media_view);
 mkMediaView.prepareAsync("音视频地址");
 ```
 
-## 懒人模式 - MKVideoView
+## 懒人模式 - MKVideoView（视频）
 MKVideoView是针对于视频播放，在MKMediaView的基础上进行了包装。它支持绑定视频控制器，视频播放相关监听器等。
 
 **使用：**

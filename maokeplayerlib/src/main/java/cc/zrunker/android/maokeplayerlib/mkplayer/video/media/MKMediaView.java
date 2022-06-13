@@ -263,6 +263,11 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
+    public int getAudioSessionId() {
+        return mkPlayer.getAudioSessionId();
+    }
+
+    @Override
     public void addOnErrorListener(MKErrorListener listener) {
         if (listener != null) {
             mkErrorListenerSet.add(listener);
