@@ -1,10 +1,14 @@
 package cc.zrunker.android.maokeplayerlib.mkplayer.core;
 
+import android.content.Context;
+import android.net.Uri;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.Map;
 
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKListener;
@@ -118,6 +122,14 @@ public class MKPlayer implements IMKPlayer {
         this.createPlayer();
         if (mediaPlayer != null) {
             mediaPlayer.setDataSource(path);
+            mediaPlayer.prepareAsync();
+        }
+    }
+
+    @Override
+    public void prepareAsync() {
+        this.createPlayer();
+        if (mediaPlayer != null) {
             mediaPlayer.prepareAsync();
         }
     }
@@ -238,4 +250,40 @@ public class MKPlayer implements IMKPlayer {
         }
         return 0;
     }
+
+    @Override
+    public void setWakeMode(Context context, int level) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setWakeMode(context, level);
+        }
+    }
+
+    @Override
+    public void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        if (mediaPlayer != null) {
+            mediaPlayer.setDataSource(context, uri);
+        }
+    }
+
+    @Override
+    public void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        if (mediaPlayer != null) {
+            mediaPlayer.setDataSource(context, uri, map);
+        }
+    }
+
+    @Override
+    public void setDataSource(FileDescriptor fileDescriptor) throws IOException, IllegalArgumentException, IllegalStateException {
+        if (mediaPlayer != null) {
+            mediaPlayer.setDataSource(fileDescriptor);
+        }
+    }
+
+    @Override
+    public void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        if (mediaPlayer != null) {
+            mediaPlayer.setDataSource(path);
+        }
+    }
+
 }
