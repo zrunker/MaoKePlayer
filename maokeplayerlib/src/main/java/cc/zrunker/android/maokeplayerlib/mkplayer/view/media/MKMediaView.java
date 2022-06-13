@@ -133,8 +133,13 @@ public class MKMediaView extends SurfaceView
     @Override
     public void addHolderCallBack(SurfaceHolder.Callback holderCallBack) {
         if (holderCallBack != null) {
-            this.holderCallBackSet.add(holderCallBack);
+            holderCallBackSet.add(holderCallBack);
         }
+    }
+
+    @Override
+    public void removeHolderCallBack(SurfaceHolder.Callback holderCallBack) {
+        holderCallBackSet.remove(holderCallBack);
     }
 
     @Override
@@ -278,6 +283,11 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
+    public void removeOnErrorListener(MKErrorListener listener) {
+        mkErrorListenerSet.remove(listener);
+    }
+
+    @Override
     public void addOnPreparedListener(IMediaPlayer.OnPreparedListener listener) {
         if (listener != null) {
             onPreparedListenerSet.add(listener);
@@ -304,6 +314,11 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
+    public void removeOnPreparedListener(IMediaPlayer.OnPreparedListener listener) {
+        onPreparedListenerSet.remove(listener);
+    }
+
+    @Override
     public void addOnCompletionListener(IMediaPlayer.OnCompletionListener listener) {
         if (listener != null) {
             onCompletionListenerSet.add(listener);
@@ -323,6 +338,11 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
+    public void removeOnCompletionListener(IMediaPlayer.OnCompletionListener listener) {
+        onCompletionListenerSet.remove(listener);
+    }
+
+    @Override
     public void addOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener) {
         if (listener != null) {
             onBufferingUpdateListenerSet.add(listener);
@@ -339,6 +359,11 @@ public class MKMediaView extends SurfaceView
                 }
             });
         }
+    }
+
+    @Override
+    public void removeOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener) {
+        onBufferingUpdateListenerSet.remove(listener);
     }
 
     @Override
@@ -362,6 +387,11 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
+    public void removeOnInfoListener(IMediaPlayer.OnInfoListener listener) {
+        onInfoListenerSet.remove(listener);
+    }
+
+    @Override
     public void addOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener) {
         if (listener != null) {
             onSeekCompleteListenerSet.add(listener);
@@ -378,6 +408,11 @@ public class MKMediaView extends SurfaceView
                 }
             });
         }
+    }
+
+    @Override
+    public void removeOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener) {
+        onSeekCompleteListenerSet.remove(listener);
     }
 
     @Override
@@ -400,6 +435,11 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
+    public void removeOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener) {
+        onTimedTextListenerSet.remove(listener);
+    }
+
+    @Override
     public void addOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener) {
         if (listener != null) {
             onVideoSizeChangedListenerSet.add(listener);
@@ -416,5 +456,10 @@ public class MKMediaView extends SurfaceView
                 }
             });
         }
+    }
+
+    @Override
+    public void removeOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener) {
+        onVideoSizeChangedListenerSet.remove(listener);
     }
 }
