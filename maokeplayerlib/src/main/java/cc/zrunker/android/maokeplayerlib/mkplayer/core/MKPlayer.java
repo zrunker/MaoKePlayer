@@ -6,7 +6,6 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 
@@ -36,6 +35,10 @@ public class MKPlayer implements IMKPlayer {
         return mkOption;
     }
 
+    public IMediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     public MKPlayer() {
         createPlayer();
     }
@@ -51,7 +54,7 @@ public class MKPlayer implements IMKPlayer {
             // 重新赋值
             mediaPlayer = ijkMediaPlayer;
             // 设置监听
-            mkListener = new MKListener(mediaPlayer);
+            mkListener = new MKListener(this);
         }
     }
 
@@ -269,13 +272,6 @@ public class MKPlayer implements IMKPlayer {
     public void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         if (mediaPlayer != null) {
             mediaPlayer.setDataSource(context, uri, map);
-        }
-    }
-
-    @Override
-    public void setDataSource(FileDescriptor fileDescriptor) throws IOException, IllegalArgumentException, IllegalStateException {
-        if (mediaPlayer != null) {
-            mediaPlayer.setDataSource(fileDescriptor);
         }
     }
 

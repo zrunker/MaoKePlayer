@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,8 +16,7 @@ import java.util.Set;
 
 import cc.zrunker.android.maokeplayerlib.R;
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
 import tv.danmaku.ijk.media.player.IjkTimedText;
 
 /**
@@ -31,19 +29,20 @@ public class MKMediaView extends SurfaceView
         implements SurfaceHolder.Callback, IMKMediaView {
     private MKPlayer mkPlayer;
     private boolean isCanPlay;
-    private String mediaPath;
-    private MKErrorListener onErrorListener;
+    //    private String mediaPath;
+    private Uri playUri;
+    private IMKListener.OnErrorListener onErrorListener;
 
     // 绑定监听
     private final Set<SurfaceHolder.Callback> holderCallBackSet = new HashSet<>();
-    private final Set<IMediaPlayer.OnPreparedListener> onPreparedListenerSet = new HashSet<>();
-    private final Set<MKErrorListener> mkErrorListenerSet = new HashSet<>();
-    private final Set<IMediaPlayer.OnCompletionListener> onCompletionListenerSet = new HashSet<>();
-    private final Set<IMediaPlayer.OnBufferingUpdateListener> onBufferingUpdateListenerSet = new HashSet<>();
-    private final Set<IMediaPlayer.OnInfoListener> onInfoListenerSet = new HashSet<>();
-    private final Set<IMediaPlayer.OnSeekCompleteListener> onSeekCompleteListenerSet = new HashSet<>();
-    private final Set<IMediaPlayer.OnTimedTextListener> onTimedTextListenerSet = new HashSet<>();
-    private final Set<IMediaPlayer.OnVideoSizeChangedListener> onVideoSizeChangedListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnPreparedListener> onPreparedListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnErrorListener> mkErrorListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnCompletionListener> onCompletionListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnBufferingUpdateListener> onBufferingUpdateListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnInfoListener> onInfoListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnSeekCompleteListener> onSeekCompleteListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnTimedTextListener> onTimedTextListenerSet = new HashSet<>();
+    private final Set<IMKListener.OnVideoSizeChangedListener> onVideoSizeChangedListenerSet = new HashSet<>();
 
     // 视频居于Z轴顶部
     private final boolean isZOrderOnTop;
@@ -97,9 +96,9 @@ public class MKMediaView extends SurfaceView
         isCanPlay = true;
         requestFocus();
         setDisplay(holder);
-        if (!TextUtils.isEmpty(mediaPath) && !isPlaying()) {
-            if (!mediaPath.equals(getDataSource())) {
-                prepareAsync(mediaPath);
+        if (playUri != null && !isPlaying()) {
+            if (!playUri.getPath().equals(getDataSource())) {
+                prepareAsync();
             } else {
                 start();
             }
@@ -182,7 +181,7 @@ public class MKMediaView extends SurfaceView
         if (TextUtils.isEmpty(path)) {
             error = "播放地址不能为空！";
         } else {
-            this.mediaPath = path;
+            playUri = Uri.parse(path);
             if (isCanPlay) {
                 try {
                     mkPlayer.prepareAsync(path);
@@ -192,14 +191,26 @@ public class MKMediaView extends SurfaceView
             }
         }
         if (onErrorListener != null && !TextUtils.isEmpty(error)) {
-            onErrorListener.onError(null, 0, 0, error);
+            onErrorListener.onError(mkPlayer, 0, 0, error);
         }
     }
 
     @Override
     public void prepareAsync() {
-        if (isCanPlay) {
-            mkPlayer.prepareAsync();
+        String error = null;
+        if (playUri == null) {
+            error = "播放地址不能为空！";
+        } else {
+            if (isCanPlay) {
+                try {
+                    mkPlayer.prepareAsync();
+                } catch (Exception e) {
+                    error = e.getMessage();
+                }
+            }
+        }
+        if (onErrorListener != null && !TextUtils.isEmpty(error)) {
+            onErrorListener.onError(mkPlayer, 0, 0, error);
         }
     }
 
@@ -285,37 +296,36 @@ public class MKMediaView extends SurfaceView
 
     @Override
     public void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        playUri = uri;
         mkPlayer.setDataSource(context, uri);
     }
 
     @Override
-    public void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+    public void setDataSource(Context context, Uri uri, Map<String, String> map)
+            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        playUri = uri;
         mkPlayer.setDataSource(context, uri, map);
     }
 
     @Override
-    public void setDataSource(FileDescriptor fileDescriptor) throws IOException, IllegalArgumentException, IllegalStateException {
-        mkPlayer.setDataSource(fileDescriptor);
-    }
-
-    @Override
-    public void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
-        mediaPath = path;
+    public void setDataSource(String path)
+            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
+        playUri = Uri.parse(path);
         mkPlayer.setDataSource(path);
     }
 
     @Override
-    public void addOnErrorListener(MKErrorListener listener) {
+    public void addOnErrorListener(IMKListener.OnErrorListener listener) {
         if (listener != null) {
             mkErrorListenerSet.add(listener);
         }
         if (mkPlayer.getMkListener() != null) {
-            onErrorListener = new MKErrorListener() {
+            onErrorListener = new IMKListener.OnErrorListener() {
                 @Override
-                public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
-                    for (MKErrorListener item : mkErrorListenerSet) {
+                public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
+                    for (IMKListener.OnErrorListener item : mkErrorListenerSet) {
                         if (item != null) {
-                            item.onError(iMediaPlayer, what, extra, error);
+                            item.onError(mkPlayer, what, extra, error);
                         }
                     }
                 }
@@ -325,29 +335,29 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnErrorListener(MKErrorListener listener) {
+    public void removeOnErrorListener(IMKListener.OnErrorListener listener) {
         mkErrorListenerSet.remove(listener);
     }
 
     @Override
-    public void addOnPreparedListener(IMediaPlayer.OnPreparedListener listener) {
+    public void addOnPreparedListener(IMKListener.OnPreparedListener listener) {
         if (listener != null) {
             onPreparedListenerSet.add(listener);
         }
         // 设置监听
         if (mkPlayer.getMkListener() != null) {
-            mkPlayer.getMkListener().setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            mkPlayer.getMkListener().setOnPreparedListener(new IMKListener.OnPreparedListener() {
                 @Override
-                public void onPrepared(IMediaPlayer iMediaPlayer) {
+                public void onPrepared(MKPlayer mkPlayer) {
                     // 设置SurfaceView大小
                     if (isAutoSize) {
                         int width = mkPlayer.getVideoWidth();
                         int height = mkPlayer.getVideoHeight();
                         getHolder().setFixedSize(width, height);
                     }
-                    for (IMediaPlayer.OnPreparedListener item : onPreparedListenerSet) {
+                    for (IMKListener.OnPreparedListener item : onPreparedListenerSet) {
                         if (item != null) {
-                            item.onPrepared(iMediaPlayer);
+                            item.onPrepared(mkPlayer);
                         }
                     }
                 }
@@ -356,22 +366,22 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnPreparedListener(IMediaPlayer.OnPreparedListener listener) {
+    public void removeOnPreparedListener(IMKListener.OnPreparedListener listener) {
         onPreparedListenerSet.remove(listener);
     }
 
     @Override
-    public void addOnCompletionListener(IMediaPlayer.OnCompletionListener listener) {
+    public void addOnCompletionListener(IMKListener.OnCompletionListener listener) {
         if (listener != null) {
             onCompletionListenerSet.add(listener);
         }
         if (mkPlayer.getMkListener() != null) {
-            mkPlayer.getMkListener().setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+            mkPlayer.getMkListener().setOnCompletionListener(new IMKListener.OnCompletionListener() {
                 @Override
-                public void onCompletion(IMediaPlayer iMediaPlayer) {
-                    for (IMediaPlayer.OnCompletionListener item : onCompletionListenerSet) {
+                public void onCompletion(MKPlayer mkPlayer) {
+                    for (IMKListener.OnCompletionListener item : onCompletionListenerSet) {
                         if (item != null) {
-                            item.onCompletion(iMediaPlayer);
+                            item.onCompletion(mkPlayer);
                         }
                     }
                 }
@@ -380,22 +390,22 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnCompletionListener(IMediaPlayer.OnCompletionListener listener) {
+    public void removeOnCompletionListener(IMKListener.OnCompletionListener listener) {
         onCompletionListenerSet.remove(listener);
     }
 
     @Override
-    public void addOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener) {
+    public void addOnBufferingUpdateListener(IMKListener.OnBufferingUpdateListener listener) {
         if (listener != null) {
             onBufferingUpdateListenerSet.add(listener);
         }
         if (mkPlayer.getMkListener() != null) {
-            mkPlayer.getMkListener().setOnBufferingUpdateListener(new IMediaPlayer.OnBufferingUpdateListener() {
+            mkPlayer.getMkListener().setOnBufferingUpdateListener(new IMKListener.OnBufferingUpdateListener() {
                 @Override
-                public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int i) {
-                    for (IMediaPlayer.OnBufferingUpdateListener item : onBufferingUpdateListenerSet) {
+                public void onBufferingUpdate(MKPlayer mkPlayer, int i) {
+                    for (IMKListener.OnBufferingUpdateListener item : onBufferingUpdateListenerSet) {
                         if (item != null) {
-                            item.onBufferingUpdate(iMediaPlayer, i);
+                            item.onBufferingUpdate(mkPlayer, i);
                         }
                     }
                 }
@@ -404,22 +414,22 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener) {
+    public void removeOnBufferingUpdateListener(IMKListener.OnBufferingUpdateListener listener) {
         onBufferingUpdateListenerSet.remove(listener);
     }
 
     @Override
-    public void addOnInfoListener(IMediaPlayer.OnInfoListener listener) {
+    public void addOnInfoListener(IMKListener.OnInfoListener listener) {
         if (listener != null) {
             onInfoListenerSet.add(listener);
         }
         if (mkPlayer.getMkListener() != null) {
-            mkPlayer.getMkListener().setOnInfoListener(new IMediaPlayer.OnInfoListener() {
+            mkPlayer.getMkListener().setOnInfoListener(new IMKListener.OnInfoListener() {
                 @Override
-                public boolean onInfo(IMediaPlayer iMediaPlayer, int i, int i1) {
-                    for (IMediaPlayer.OnInfoListener item : onInfoListenerSet) {
+                public boolean onInfo(MKPlayer mkPlayer, int i, int i1) {
+                    for (IMKListener.OnInfoListener item : onInfoListenerSet) {
                         if (item != null) {
-                            item.onInfo(iMediaPlayer, i, i1);
+                            item.onInfo(mkPlayer, i, i1);
                         }
                     }
                     return false;
@@ -429,22 +439,22 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnInfoListener(IMediaPlayer.OnInfoListener listener) {
+    public void removeOnInfoListener(IMKListener.OnInfoListener listener) {
         onInfoListenerSet.remove(listener);
     }
 
     @Override
-    public void addOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener) {
+    public void addOnSeekCompleteListener(IMKListener.OnSeekCompleteListener listener) {
         if (listener != null) {
             onSeekCompleteListenerSet.add(listener);
         }
         if (mkPlayer.getMkListener() != null) {
-            mkPlayer.getMkListener().setOnSeekCompleteListener(new IMediaPlayer.OnSeekCompleteListener() {
+            mkPlayer.getMkListener().setOnSeekCompleteListener(new IMKListener.OnSeekCompleteListener() {
                 @Override
-                public void onSeekComplete(IMediaPlayer iMediaPlayer) {
-                    for (IMediaPlayer.OnSeekCompleteListener item : onSeekCompleteListenerSet) {
+                public void onSeekComplete(MKPlayer mkPlayer) {
+                    for (IMKListener.OnSeekCompleteListener item : onSeekCompleteListenerSet) {
                         if (item != null) {
-                            item.onSeekComplete(iMediaPlayer);
+                            item.onSeekComplete(mkPlayer);
                         }
                     }
                 }
@@ -453,22 +463,22 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener) {
+    public void removeOnSeekCompleteListener(IMKListener.OnSeekCompleteListener listener) {
         onSeekCompleteListenerSet.remove(listener);
     }
 
     @Override
-    public void addOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener) {
+    public void addOnTimedTextListener(IMKListener.OnTimedTextListener listener) {
         if (listener != null) {
             onTimedTextListenerSet.add(listener);
         }
         if (mkPlayer.getMkListener() != null) {
-            mkPlayer.getMkListener().setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
+            mkPlayer.getMkListener().setOnTimedTextListener(new IMKListener.OnTimedTextListener() {
                 @Override
-                public void onTimedText(IMediaPlayer iMediaPlayer, IjkTimedText ijkTimedText) {
-                    for (IMediaPlayer.OnTimedTextListener item : onTimedTextListenerSet) {
+                public void onTimedText(MKPlayer mkPlayer, IjkTimedText ijkTimedText) {
+                    for (IMKListener.OnTimedTextListener item : onTimedTextListenerSet) {
                         if (item != null) {
-                            item.onTimedText(iMediaPlayer, ijkTimedText);
+                            item.onTimedText(mkPlayer, ijkTimedText);
                         }
                     }
                 }
@@ -477,22 +487,22 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener) {
+    public void removeOnTimedTextListener(IMKListener.OnTimedTextListener listener) {
         onTimedTextListenerSet.remove(listener);
     }
 
     @Override
-    public void addOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener) {
+    public void addOnVideoSizeChangedListener(IMKListener.OnVideoSizeChangedListener listener) {
         if (listener != null) {
             onVideoSizeChangedListenerSet.add(listener);
         }
         if (mkPlayer.getMkListener() != null) {
-            mkPlayer.getMkListener().setOnVideoSizeChangedListener(new IMediaPlayer.OnVideoSizeChangedListener() {
+            mkPlayer.getMkListener().setOnVideoSizeChangedListener(new IMKListener.OnVideoSizeChangedListener() {
                 @Override
-                public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int i, int i1, int i2, int i3) {
-                    for (IMediaPlayer.OnVideoSizeChangedListener item : onVideoSizeChangedListenerSet) {
+                public void onVideoSizeChanged(MKPlayer mkPlayer, int i, int i1, int i2, int i3) {
+                    for (IMKListener.OnVideoSizeChangedListener item : onVideoSizeChangedListenerSet) {
                         if (item != null) {
-                            item.onVideoSizeChanged(iMediaPlayer, i, i1, i2, i3);
+                            item.onVideoSizeChanged(mkPlayer, i, i1, i2, i3);
                         }
                     }
                 }
@@ -501,7 +511,7 @@ public class MKMediaView extends SurfaceView
     }
 
     @Override
-    public void removeOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener) {
+    public void removeOnVideoSizeChangedListener(IMKListener.OnVideoSizeChangedListener listener) {
         onVideoSizeChangedListenerSet.remove(listener);
     }
 }

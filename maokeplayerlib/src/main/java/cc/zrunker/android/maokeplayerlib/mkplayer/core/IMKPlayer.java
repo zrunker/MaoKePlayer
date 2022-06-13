@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.SurfaceHolder;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Map;
 
@@ -146,8 +145,6 @@ public interface IMKPlayer {
     void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
     void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
-
-    void setDataSource(FileDescriptor fileDescriptor) throws IOException, IllegalArgumentException, IllegalStateException;
 
     void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 

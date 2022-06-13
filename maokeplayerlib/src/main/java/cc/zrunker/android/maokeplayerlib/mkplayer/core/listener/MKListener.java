@@ -1,6 +1,8 @@
 package cc.zrunker.android.maokeplayerlib.mkplayer.core.listener;
 
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkTimedText;
 
 /**
  * @program: ZMaoKePlayer
@@ -9,120 +11,162 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * @create: 2021/12/9 3:38 下午
  **/
 public class MKListener implements IMKListener {
-    private final IMediaPlayer mediaPlayer;
-    private IMediaPlayer.OnErrorListener onErrorListener;
-    private IMediaPlayer.OnPreparedListener onPreparedListener;
-    private IMediaPlayer.OnCompletionListener onCompletionListener;
-    private IMediaPlayer.OnBufferingUpdateListener onBufferingUpdateListener;
-    private IMediaPlayer.OnInfoListener onInfoListener;
-    private IMediaPlayer.OnSeekCompleteListener onSeekCompleteListener;
-    private IMediaPlayer.OnTimedTextListener onTimedTextListener;
-    private IMediaPlayer.OnVideoSizeChangedListener onVideoSizeChangedListener;
+    private final MKPlayer mkPlayer;
+    private OnErrorListener onErrorListener;
+    private OnPreparedListener onPreparedListener;
+    private OnCompletionListener onCompletionListener;
+    private OnBufferingUpdateListener onBufferingUpdateListener;
+    private OnInfoListener onInfoListener;
+    private OnSeekCompleteListener onSeekCompleteListener;
+    private OnTimedTextListener onTimedTextListener;
+    private OnVideoSizeChangedListener onVideoSizeChangedListener;
 
-    public MKListener(IMediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
+    public MKListener(MKPlayer mkPlayer) {
+        this.mkPlayer = mkPlayer;
         if (onPreparedListener != null) {
-            mediaPlayer.setOnPreparedListener(onPreparedListener);
+            setOnPreparedListener(onPreparedListener);
         }
         if (onErrorListener != null) {
-            mediaPlayer.setOnErrorListener(onErrorListener);
+            setOnErrorListener(onErrorListener);
         }
         if (onCompletionListener != null) {
-            mediaPlayer.setOnCompletionListener(onCompletionListener);
+            setOnCompletionListener(onCompletionListener);
         }
         if (onBufferingUpdateListener != null) {
-            mediaPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+            setOnBufferingUpdateListener(onBufferingUpdateListener);
         }
         if (onInfoListener != null) {
-            mediaPlayer.setOnInfoListener(onInfoListener);
+            setOnInfoListener(onInfoListener);
         }
         if (onSeekCompleteListener != null) {
-            mediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
+            setOnSeekCompleteListener(onSeekCompleteListener);
         }
         if (onTimedTextListener != null) {
-            mediaPlayer.setOnTimedTextListener(onTimedTextListener);
+            setOnTimedTextListener(onTimedTextListener);
         }
         if (onVideoSizeChangedListener != null) {
-            mediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+            setOnVideoSizeChangedListener(onVideoSizeChangedListener);
         }
     }
 
     @Override
-    public void setOnPreparedListener(IMediaPlayer.OnPreparedListener listener) {
+    public void setOnPreparedListener(OnPreparedListener listener) {
         if (listener != null) {
             this.onPreparedListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnPreparedListener(onPreparedListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(IMediaPlayer iMediaPlayer) {
+                        onPreparedListener.onPrepared(mkPlayer);
+                    }
+                });
             }
         }
     }
 
     @Override
-    public void setOnCompletionListener(IMediaPlayer.OnCompletionListener listener) {
+    public void setOnCompletionListener(OnCompletionListener listener) {
         if (listener != null) {
             this.onCompletionListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnCompletionListener(onCompletionListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(IMediaPlayer iMediaPlayer) {
+                        onCompletionListener.onCompletion(mkPlayer);
+                    }
+                });
             }
         }
     }
 
     @Override
-    public void setOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener) {
+    public void setOnBufferingUpdateListener(OnBufferingUpdateListener listener) {
         if (listener != null) {
             this.onBufferingUpdateListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnBufferingUpdateListener(onBufferingUpdateListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnBufferingUpdateListener(new IMediaPlayer.OnBufferingUpdateListener() {
+                    @Override
+                    public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int i) {
+                        onBufferingUpdateListener.onBufferingUpdate(mkPlayer, i);
+                    }
+                });
             }
         }
     }
 
     @Override
-    public void setOnInfoListener(IMediaPlayer.OnInfoListener listener) {
+    public void setOnInfoListener(OnInfoListener listener) {
         if (listener != null) {
             this.onInfoListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnInfoListener(onInfoListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnInfoListener(new IMediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(IMediaPlayer iMediaPlayer, int i, int i1) {
+                        onInfoListener.onInfo(mkPlayer, i, i1);
+                        return false;
+                    }
+                });
             }
         }
     }
 
     @Override
-    public void setOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener) {
+    public void setOnSeekCompleteListener(OnSeekCompleteListener listener) {
         if (listener != null) {
             this.onSeekCompleteListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnSeekCompleteListener(onSeekCompleteListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnSeekCompleteListener(new IMediaPlayer.OnSeekCompleteListener() {
+                    @Override
+                    public void onSeekComplete(IMediaPlayer iMediaPlayer) {
+                        onSeekCompleteListener.onSeekComplete(mkPlayer);
+                    }
+                });
             }
         }
     }
 
     @Override
-    public void setOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener) {
+    public void setOnTimedTextListener(OnTimedTextListener listener) {
         if (listener != null) {
             this.onTimedTextListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnTimedTextListener(onTimedTextListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
+                    @Override
+                    public void onTimedText(IMediaPlayer iMediaPlayer, IjkTimedText ijkTimedText) {
+                        onTimedTextListener.onTimedText(mkPlayer, ijkTimedText);
+                    }
+                });
             }
         }
     }
 
     @Override
-    public void setOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener) {
+    public void setOnVideoSizeChangedListener(OnVideoSizeChangedListener listener) {
         if (listener != null) {
             this.onVideoSizeChangedListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnVideoSizeChangedListener(new IMediaPlayer.OnVideoSizeChangedListener() {
+                    @Override
+                    public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int i, int i1, int i2, int i3) {
+                        onVideoSizeChangedListener.onVideoSizeChanged(mkPlayer, i, i1, i2, i3);
+                    }
+                });
             }
         }
     }
 
     @Override
-    public void setOnErrorListener(MKErrorListener listener) {
+    public void setOnErrorListener(OnErrorListener listener) {
         if (listener != null) {
             this.onErrorListener = listener;
-            if (mediaPlayer != null) {
-                mediaPlayer.setOnErrorListener(onErrorListener);
+            if (mkPlayer != null) {
+                mkPlayer.getMediaPlayer().setOnErrorListener(new IMediaPlayer.OnErrorListener() {
+                    @Override
+                    public boolean onError(IMediaPlayer iMediaPlayer, int what, int extra) {
+                        listener.onError(mkPlayer, what, extra, ErrorTrans.trans(what));
+                        return false;
+                    }
+                });
             }
         }
     }

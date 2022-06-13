@@ -5,9 +5,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
 import cc.zrunker.android.maokeplayerlib.mkplayer.video.MKVideoView;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,12 +17,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         MKVideoView mkVideoView = findViewById(R.id.mkVideo);
-        mkVideoView.setOnErrorListener(new MKErrorListener() {
+        mkVideoView.setOnErrorListener(new IMKListener.OnErrorListener() {
             @Override
-            public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
+            public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
                 Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
             }
         });
-        mkVideoView.play("https://s19.aconvert.com/convert/p3r68-cdx67/oknzk-87d3p.mp4");
+        mkVideoView.play("https://s31.aconvert.com/convert/p3r68-cdx67/hon09-tem1j.mp4");
     }
 }

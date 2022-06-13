@@ -3,8 +3,7 @@ package cc.zrunker.android.maokeplayerlib.mkplayer.video.media;
 import android.view.SurfaceHolder;
 
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.IMKPlayer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
 
 /**
  * @program: ZMaoKePlayer
@@ -24,56 +23,56 @@ public interface IMKMediaView extends IMKPlayer {
     /**
      * 设置播放异常监听
      */
-    void addOnErrorListener(MKErrorListener listener);
+    void addOnErrorListener(IMKListener.OnErrorListener listener);
 
-    void removeOnErrorListener(MKErrorListener listener);
+    void removeOnErrorListener(IMKListener.OnErrorListener listener);
 
     /**
      * 设置预播放监听
      */
-    void addOnPreparedListener(IMediaPlayer.OnPreparedListener listener);
+    void addOnPreparedListener(IMKListener.OnPreparedListener listener);
 
-    void removeOnPreparedListener(IMediaPlayer.OnPreparedListener listener);
+    void removeOnPreparedListener(IMKListener.OnPreparedListener listener);
 
     /**
      * 设置播放完成监听
      */
-    void addOnCompletionListener(IMediaPlayer.OnCompletionListener listener);
+    void addOnCompletionListener(IMKListener.OnCompletionListener listener);
 
-    void removeOnCompletionListener(IMediaPlayer.OnCompletionListener listener);
+    void removeOnCompletionListener(IMKListener.OnCompletionListener listener);
 
     /**
      * 设置Buffer更新监听
      */
-    void addOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener);
+    void addOnBufferingUpdateListener(IMKListener.OnBufferingUpdateListener listener);
 
-    void removeOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener);
+    void removeOnBufferingUpdateListener(IMKListener.OnBufferingUpdateListener listener);
 
     /**
      * 媒体信息回调
      */
-    void addOnInfoListener(IMediaPlayer.OnInfoListener listener);
+    void addOnInfoListener(IMKListener.OnInfoListener listener);
 
-    void removeOnInfoListener(IMediaPlayer.OnInfoListener listener);
+    void removeOnInfoListener(IMKListener.OnInfoListener listener);
 
     /**
      * Seek完成回调
      */
-    void addOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener);
+    void addOnSeekCompleteListener(IMKListener.OnSeekCompleteListener listener);
 
-    void removeOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener);
+    void removeOnSeekCompleteListener(IMKListener.OnSeekCompleteListener listener);
 
     /**
      * 可用定时文本回调 - 字幕
      */
-    void addOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener);
+    void addOnTimedTextListener(IMKListener.OnTimedTextListener listener);
 
-    void removeOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener);
+    void removeOnTimedTextListener(IMKListener.OnTimedTextListener listener);
 
     /**
      * 视频大小改变监听
      */
-    void addOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener);
+    void addOnVideoSizeChangedListener(IMKListener.OnVideoSizeChangedListener listener);
 
-    void removeOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener);
+    void removeOnVideoSizeChangedListener(IMKListener.OnVideoSizeChangedListener listener);
 }

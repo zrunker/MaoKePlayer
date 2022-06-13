@@ -18,8 +18,7 @@ import android.widget.Toast;
 
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.view.VisualizerView;
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
 
 /**
  * @program: ZMaoKePlayer
@@ -313,9 +312,9 @@ public class AudioExecutor {
         }
 
         // 设置播放错误监听
-        mkPlayer.getMkListener().setOnErrorListener(new MKErrorListener() {
+        mkPlayer.getMkListener().setOnErrorListener(new IMKListener.OnErrorListener() {
             @Override
-            public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
+            public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
                 if (mkPlayerListener != null) {
                     mkPlayerListener.onError(mkPlayer, what, extra, error);
                 }
@@ -326,9 +325,9 @@ public class AudioExecutor {
         });
 
         // 设置播放完成监听
-        mkPlayer.getMkListener().setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+        mkPlayer.getMkListener().setOnCompletionListener(new IMKListener.OnCompletionListener() {
             @Override
-            public void onCompletion(IMediaPlayer iMediaPlayer) {
+            public void onCompletion(MKPlayer mkPlayer) {
                 if (visualizer != null)
                     visualizer.setEnabled(false);
                 if (mkPlayerListener != null)
@@ -337,9 +336,9 @@ public class AudioExecutor {
         });
 
         // 异步准备Prepared完成监听
-        mkPlayer.getMkListener().setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+        mkPlayer.getMkListener().setOnPreparedListener(new IMKListener.OnPreparedListener() {
             @Override
-            public void onPrepared(IMediaPlayer iMediaPlayer) {
+            public void onPrepared(MKPlayer mkPlayer) {
                 if (mkPlayerListener != null) {
                     mkPlayerListener.onPrepared(mkPlayer);
                 }
@@ -349,9 +348,9 @@ public class AudioExecutor {
         });
 
         // 进度调整完成SeekComplete监听
-        mkPlayer.getMkListener().setOnSeekCompleteListener(new IMediaPlayer.OnSeekCompleteListener() {
+        mkPlayer.getMkListener().setOnSeekCompleteListener(new IMKListener.OnSeekCompleteListener() {
             @Override
-            public void onSeekComplete(IMediaPlayer iMediaPlayer) {
+            public void onSeekComplete(MKPlayer mkPlayer) {
                 if (mkPlayerListener != null) {
                     mkPlayerListener.onSeekComplete(mkPlayer);
                 }
@@ -359,9 +358,9 @@ public class AudioExecutor {
         });
 
         // 网络流媒体缓冲监听
-        mkPlayer.getMkListener().setOnBufferingUpdateListener(new IMediaPlayer.OnBufferingUpdateListener() {
+        mkPlayer.getMkListener().setOnBufferingUpdateListener(new IMKListener.OnBufferingUpdateListener() {
             @Override
-            public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int progress) {
+            public void onBufferingUpdate(MKPlayer mkPlayer, int progress) {
                 // i 0~100
                 Log.d(TAG, "缓存进度" + progress + "%");
                 if (mkPlayerListener != null) {

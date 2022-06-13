@@ -174,9 +174,9 @@ MKVideoView是针对于视频播放，在MKMediaView的基础上进行了包装�
 2. 执行MKVideoView播放：
 ```
 MKVideoView mkVideoView = findViewById(R.id.mkVideo);
-mkVideoView.setOnErrorListener(new MKErrorListener() {
+mkVideoView.setOnErrorListener(new IMKListener.OnErrorListener() {
     @Override
-    public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
+    public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
         Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
     }
 });
