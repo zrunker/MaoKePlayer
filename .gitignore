@@ -12,7 +12,7 @@
 /captures
 .externalNativeBuild
 .cxx
-/.idea/
 /gradlew
 /gradlew.bat
 /gradle/
+/.idea/

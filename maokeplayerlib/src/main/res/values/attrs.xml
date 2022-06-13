@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MKVideoView">
+        <attr name="isBindController" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MKMediaView">
+        <!--视频自动大小-->
+        <attr name="isAutoSize" format="boolean" />
+        <!--视频居于Z轴顶部-->
+        <attr name="isZOrderOnTop" format="boolean" />
+        <!--保持屏幕常亮-->
+        <attr name="isKeepScreenOn" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MKController">
+        <attr name="isShowSkipPrevious" format="boolean" />
+        <attr name="isShowSkipNext" format="boolean" />
+        <attr name="isShowFastRewind" format="boolean" />
+        <attr name="isShowFastForward" format="boolean" />
+    </declare-styleable>
+</resources>
