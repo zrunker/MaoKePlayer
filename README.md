@@ -180,3 +180,5 @@ mkVideoView.play("视频地址");
 
 关于视频控制器，详情可查看：`cc.zrunker.android.maokeplayerlib.mkplayer.view.controller.MKController`
 
+效果图：![猫客影音播放器](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-10-153103.png)
+
