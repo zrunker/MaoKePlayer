@@ -3,7 +3,8 @@ package cc.zrunker.android.maokeplayerlib.mkplayer.view.media;
 import android.view.SurfaceHolder;
 
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.IMKPlayer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
+import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * @program: ZMaoKePlayer
@@ -11,8 +12,51 @@ import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
  * @author: zoufengli01
  * @create: 2021/12/6 3:08 下午
  **/
-public interface IMKMediaView extends IMKPlayer, IMKListener {
+public interface IMKMediaView extends IMKPlayer {
 
-    void setHolderCallBack(SurfaceHolder.Callback holderCallBack);
+    /**
+     * 对SurfaceHolder状态变化监听
+     */
+    void addHolderCallBack(SurfaceHolder.Callback holderCallBack);
+
+    /**
+     * 设置播放异常监听
+     */
+    void addOnErrorListener(MKErrorListener listener);
+
+    /**
+     * 设置预播放监听
+     */
+    void addOnPreparedListener(IMediaPlayer.OnPreparedListener listener);
+
+    /**
+     * 设置播放完成监听
+     */
+    void addOnCompletionListener(IMediaPlayer.OnCompletionListener listener);
+
+    /**
+     * 设置Buffer更新监听
+     */
+    void addOnBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener listener);
+
+    /**
+     * 媒体信息回调
+     */
+    void addOnInfoListener(IMediaPlayer.OnInfoListener listener);
+
+    /**
+     * Seek完成回调
+     */
+    void addOnSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener listener);
+
+    /**
+     * 可用定时文本回调 - 字幕
+     */
+    void addOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener);
+
+    /**
+     * 视频大小改变监听
+     */
+    void addOnVideoSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener listener);
 
 }

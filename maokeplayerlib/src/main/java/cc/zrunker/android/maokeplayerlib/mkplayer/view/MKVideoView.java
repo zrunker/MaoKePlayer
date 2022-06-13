@@ -82,7 +82,7 @@ public class MKVideoView extends FrameLayout {
     }
 
     public MKVideoView setOnPreparedListener(IMediaPlayer.OnPreparedListener listener) {
-        mkMediaView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+        mkMediaView.addOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer iMediaPlayer) {
                 progressCircular.setVisibility(GONE);
@@ -95,7 +95,7 @@ public class MKVideoView extends FrameLayout {
     }
 
     public MKVideoView setOnErrorListener(MKErrorListener listener) {
-        mkMediaView.setOnErrorListener(new MKErrorListener() {
+        mkMediaView.addOnErrorListener(new MKErrorListener() {
             @Override
             public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
                 progressCircular.setVisibility(GONE);
@@ -108,7 +108,7 @@ public class MKVideoView extends FrameLayout {
     }
 
     public MKVideoView setOnCompletionListener(IMediaPlayer.OnCompletionListener listener) {
-        mkMediaView.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+        mkMediaView.addOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(IMediaPlayer iMediaPlayer) {
                 progressCircular.setVisibility(GONE);

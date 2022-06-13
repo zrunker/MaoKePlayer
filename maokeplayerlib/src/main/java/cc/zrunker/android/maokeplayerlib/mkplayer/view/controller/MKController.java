@@ -193,7 +193,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
                 vGroup.addView(this, index);
             }
             mkMediaView.setOnTouchListener(new MKTouchListener());
-            mkMediaView.setHolderCallBack(new SurfaceHolder.Callback() {
+            mkMediaView.addHolderCallBack(new SurfaceHolder.Callback() {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
                     resetCurrentD();
@@ -211,19 +211,19 @@ public class MKController extends FrameLayout implements View.OnClickListener {
 
                 }
             });
-            mkMediaView.setOnErrorListener(new MKErrorListener() {
+            mkMediaView.addOnErrorListener(new MKErrorListener() {
                 @Override
                 public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
                     updatePausePlay(false);
                 }
             });
-            mkMediaView.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+            mkMediaView.addOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(IMediaPlayer iMediaPlayer) {
                     updatePausePlay(false);
                 }
             });
-            mkMediaView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            mkMediaView.addOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(IMediaPlayer iMediaPlayer) {
                     updatePausePlay(mkMediaView.isPlaying());
@@ -322,7 +322,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
             }
         } else if (id == R.id.iv_fast_rewind) {
             if (mkMediaView != null) {
-                mkMediaView.seekTo(mkMediaView.getCurrentPosition() - 5);
+                mkMediaView.seekTo(mkMediaView.getCurrentPosition() - 5000);
                 executeUpdateUiHandler();
                 if (onControllerListener != null) {
                     onControllerListener.onFastRewind();
@@ -335,7 +335,7 @@ public class MKController extends FrameLayout implements View.OnClickListener {
             }
         } else if (id == R.id.iv_fast_forward) {
             if (mkMediaView != null) {
-                mkMediaView.seekTo(mkMediaView.getCurrentPosition() + 5);
+                mkMediaView.seekTo(mkMediaView.getCurrentPosition() + 5000);
                 executeUpdateUiHandler();
                 if (onControllerListener != null) {
                     onControllerListener.onFastForward();
