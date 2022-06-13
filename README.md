@@ -157,12 +157,8 @@ mkMediaView.prepareAsync("音视频地址");
 ## 懒人模式 - MKVideoView
 MKVideoView是针对于视频播放，在MKMediaView的基础上进行了包装。它支持绑定视频控制器，视频播放相关监听器等。
 
-
-## MKMediaView
-MKMediaView是基于SurfaceView用来呈现视频渲染结果，此View不包含视频控制器，用户可以自行定制想要的控制器效果。
-
 **使用：**
-1. 在布局中添加MKMediaView：
+1. 在布局中添加MKVideoView：
 ```
 <cc.zrunker.android.maokeplayerlib.mkplayer.view.MKVideoView
     android:id="@+id/mkVideo"
@@ -170,7 +166,7 @@ MKMediaView是基于SurfaceView用来呈现视频渲染结果，此View不包含
     android:layout_height="wrap_content"
     app:isBindController="true" />
 ```
-2. 执行MKMediaView播放：
+2. 执行MKVideoView播放：
 ```
 MKVideoView mkVideoView = findViewById(R.id.mkVideo);
 mkVideoView.setOnErrorListener(new MKErrorListener() {
@@ -181,4 +177,6 @@ mkVideoView.setOnErrorListener(new MKErrorListener() {
 });
 mkVideoView.play("视频地址");
 ```
+
+关于视频控制器，详情可查看：`cc.zrunker.android.maokeplayerlib.mkplayer.view.controller.MKController`
 
