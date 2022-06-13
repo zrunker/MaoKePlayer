@@ -25,6 +25,10 @@ public class MKVideoView extends FrameLayout {
     private final ProgressBar progressCircular;
     private MKController defaultController;
 
+    public MKController getDefaultController() {
+        return defaultController;
+    }
+
     public MKVideoView(Context context) {
         this(context, null);
     }

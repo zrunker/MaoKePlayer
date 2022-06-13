@@ -122,13 +122,18 @@ public interface IMKPlayer {
      * 采样长宽比:num / den
      */
     int getVideoSarDen();
+
+    /**
+     * 获取Audio Session ID
+     */
+    int getAudioSessionId();
 }
 ```
 如此同时，MKPlayer还支持视频配置，详情可查看：
 `cc.zrunker.android.maokeplayerlib.mkplayer.core.option.IMKOption`
 
 ```
-// 获取MKPlayer默认视频配置IMKOption
+// 获取MKPlayer中默认视频配置IMKOption
 public IMKOption getMkOption() {
     return mkOption;
 }
@@ -180,5 +185,11 @@ mkVideoView.play("视频地址");
 
 关于视频控制器，详情可查看：`cc.zrunker.android.maokeplayerlib.mkplayer.video.controller.MKController`
 
-效果图：![猫客影音播放器](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-10-153103.png)
+```
+// 获取MKVideoView中默认视频控制器
+public MKController getDefaultController() {
+    return defaultController;
+}
+```
 
+![猫客影音播放器效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-10-153103.png)
