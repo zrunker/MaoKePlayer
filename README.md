@@ -227,16 +227,16 @@ VisualizerView是用来显示音频的傅立叶数据图，目前支持四种方
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 ```
-2. 绑定VisualizerView，并执行AudioExecutor播放：
+2. 绑定VisualizerView，并执行AudioExecutor播放，注意四种音波图选择一种即可，不选择取默认音波图效果：
 ```
 VisualizerView visualizerView = findViewById(R.id.visualizerView);
 // 第一种音波图，也是默认音波图
 visualizerView.addCircleRenderer();
-// 第一种音波图
+// 第二种音波图
 visualizerView.addBarGraphRenderers();
-// 第一种音波图
+// 第三种音波图
 visualizerView.addCircleBarRenderer();
-// 第一种音波图
+// 第四种音波图
 visualizerView.addLineRenderer();
 // 绑定AudioExecutor
 AudioExecutor audioExecutor = new AudioExecutor(this, visualizerView);
