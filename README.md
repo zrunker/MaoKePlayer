@@ -156,7 +156,13 @@ MKMediaView是基于SurfaceView用来呈现视频渲染结果，此View不包含
 2. 执行MKMediaView播放：
 ```
 MKMediaView mkMediaView = findViewById(R.id.media_view);
-mkMediaView.prepareAsync("音视频地址");
+mkMediaView.addOnErrorListener(new IMKListener.OnErrorListener() {
+    @Override
+    public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
+                
+    }
+});
+mkMediaView.prepareAsync("视频地址");
 ```
 
 ## 懒人模式 - MKVideoView（视频）
