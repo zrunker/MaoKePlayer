@@ -217,7 +217,7 @@ protected void onDestroy() {
 ```
 
 ## VisualizerView/AudioView（音频 - 音波图）
-VisualizerView是用来显示音频的傅立叶数据图，目前支持四种方式来显示音波图。
+VisualizerView是用来显示音频的傅立叶数据图，目前支持四种音波效果图。
 
 **使用：**
 1. 在布局中添加VisualizerView：
