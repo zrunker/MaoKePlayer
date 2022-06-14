@@ -3,15 +3,12 @@ package cc.zrunker.android.maokeplayerlib.mkplayer.video.media;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import cc.zrunker.android.maokeplayerlib.R;
@@ -29,8 +26,7 @@ public class MKMediaView extends SurfaceView
         implements SurfaceHolder.Callback, IMKMediaView {
     private MKPlayer mkPlayer;
     private boolean isCanPlay;
-    //    private String mediaPath;
-    private Uri playUri;
+    private String mediaPath;
     private IMKListener.OnErrorListener onErrorListener;
 
     // 绑定监听
@@ -96,9 +92,9 @@ public class MKMediaView extends SurfaceView
         isCanPlay = true;
         requestFocus();
         setDisplay(holder);
-        if (playUri != null && !isPlaying()) {
-            if (!playUri.getPath().equals(getDataSource())) {
-                prepareAsync();
+        if (!TextUtils.isEmpty(mediaPath) && !isPlaying()) {
+            if (!mediaPath.equals(getDataSource())) {
+                prepareAsync(mediaPath);
             } else {
                 start();
             }
@@ -181,7 +177,7 @@ public class MKMediaView extends SurfaceView
         if (TextUtils.isEmpty(path)) {
             error = "播放地址不能为空！";
         } else {
-            playUri = Uri.parse(path);
+            this.mediaPath = path;
             if (isCanPlay) {
                 try {
                     mkPlayer.prepareAsync(path);
@@ -191,26 +187,7 @@ public class MKMediaView extends SurfaceView
             }
         }
         if (onErrorListener != null && !TextUtils.isEmpty(error)) {
-            onErrorListener.onError(mkPlayer, 0, 0, error);
-        }
-    }
-
-    @Override
-    public void prepareAsync() {
-        String error = null;
-        if (playUri == null) {
-            error = "播放地址不能为空！";
-        } else {
-            if (isCanPlay) {
-                try {
-                    mkPlayer.prepareAsync();
-                } catch (Exception e) {
-                    error = e.getMessage();
-                }
-            }
-        }
-        if (onErrorListener != null && !TextUtils.isEmpty(error)) {
-            onErrorListener.onError(mkPlayer, 0, 0, error);
+            onErrorListener.onError(null, 0, 0, error);
         }
     }
 
@@ -292,26 +269,6 @@ public class MKMediaView extends SurfaceView
     @Override
     public void setWakeMode(Context context, int level) {
         mkPlayer.setWakeMode(context, level);
-    }
-
-    @Override
-    public void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
-        playUri = uri;
-        mkPlayer.setDataSource(context, uri);
-    }
-
-    @Override
-    public void setDataSource(Context context, Uri uri, Map<String, String> map)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
-        playUri = uri;
-        mkPlayer.setDataSource(context, uri, map);
-    }
-
-    @Override
-    public void setDataSource(String path)
-            throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
-        playUri = Uri.parse(path);
-        mkPlayer.setDataSource(path);
     }
 
     @Override

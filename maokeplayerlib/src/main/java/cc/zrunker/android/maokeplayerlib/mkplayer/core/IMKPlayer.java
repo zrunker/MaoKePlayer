@@ -1,11 +1,9 @@
 package cc.zrunker.android.maokeplayerlib.mkplayer.core;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @program: ZMaoKePlayer
@@ -56,7 +54,7 @@ public interface IMKPlayer {
      */
     void prepareAsync(String path) throws IOException;
 
-    void prepareAsync();
+//    void prepareAsync();
 
     /**
      * 设置呈现
@@ -142,10 +140,10 @@ public interface IMKPlayer {
      */
     void setWakeMode(Context context, int level);
 
-    void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+//    void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
-    void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+//    void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
-    void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+//    void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
 
 }

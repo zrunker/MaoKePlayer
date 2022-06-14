@@ -2,7 +2,6 @@ package cc.zrunker.android.maokeplayerlib.mkplayer.video;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -85,28 +84,14 @@ public class MKVideoView extends FrameLayout {
      */
     public void play(String path) {
         if (!TextUtils.isEmpty(path)) {
-            Uri uri = Uri.parse(path);
-            play(uri);
-        }
-    }
-
-    // 播放2
-    public void play(Uri uri) {
-        try {
-            if (uri != null) {
-                progressCircular.setVisibility(VISIBLE);
-                // 重置MKPlayer
-                mkMediaView.reset();
-                // 重新加载音频资源
-                mkMediaView.setDataSource(getContext(), uri);
-                // 准备播放（异步）
-                mkMediaView.prepareAsync();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            progressCircular.setVisibility(GONE);
+            progressCircular.setVisibility(VISIBLE);
+            // 重置MKPlayer
+            mkMediaView.reset();
+            // 准备播放（异步）
+            mkMediaView.prepareAsync(path);
+        } else {
             if (mkErrorListener != null) {
-                mkErrorListener.onError(null, 0, 0, e.getMessage());
+                mkErrorListener.onError(null, 0, 0, "播放地址为空！");
             }
         }
     }
@@ -125,7 +110,7 @@ public class MKVideoView extends FrameLayout {
     }
 
     public MKVideoView setOnErrorListener(IMKListener.OnErrorListener listener) {
-        mkMediaView.addOnErrorListener(new IMKListener.OnErrorListener() {
+        mkErrorListener = new IMKListener.OnErrorListener() {
             @Override
             public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
                 progressCircular.setVisibility(GONE);
@@ -133,7 +118,8 @@ public class MKVideoView extends FrameLayout {
                     listener.onError(mkPlayer, what, extra, error);
                 }
             }
-        });
+        };
+        mkMediaView.addOnErrorListener(mkErrorListener);
         return this;
     }
 

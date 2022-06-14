@@ -8,13 +8,14 @@ import android.media.audiofx.AutomaticGainControl;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.NoiseSuppressor;
 import android.media.audiofx.Visualizer;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.view.VisualizerView;
 import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
@@ -182,31 +183,24 @@ public class AudioExecutor {
     // 播放1
     public AudioExecutor play(String url) {
         if (!TextUtils.isEmpty(url)) {
-            Uri uri = Uri.parse(url);
-            play(uri);
-        }
-        return this;
-    }
-
-    // 播放2
-    public AudioExecutor play(Uri uri) {
-        try {
-            if (uri != null) {
-                // 开启播放
-                if (mkPlayer == null) {
-                    init();
-                }
-                // 重置MKPlayer
-                mkPlayer.reset();
-                // 重新加载音频资源
-                mkPlayer.setDataSource(context, uri);
-                // 准备播放（异步）
-                mkPlayer.prepareAsync();
+            // 开启播放
+            if (mkPlayer == null) {
+                init();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            // 重置MKPlayer
+            mkPlayer.reset();
+            // 准备播放（异步）
+            try {
+                mkPlayer.prepareAsync(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (mkPlayerListener != null) {
+                    mkPlayerListener.onError(mkPlayer, 0, 0, e.getMessage());
+                }
+            }
+        } else {
             if (mkPlayerListener != null) {
-                mkPlayerListener.onError(mkPlayer, 0, 0, e.getMessage());
+                mkPlayerListener.onError(mkPlayer, 0, 0, "播放地址为空！");
             }
         }
         return this;
