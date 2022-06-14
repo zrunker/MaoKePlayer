@@ -198,4 +198,52 @@ public MKController getDefaultController() {
 }
 ```
 
-![猫客影音播放器效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-10-153103.png)
+![猫客影音播放器视频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-10-153103.png)
+
+## AudioExecutor（音频执行类）
+AudioExecutor是专门针对于音频播放的封装类，它支持几乎所有常见的音频播放的操作API，例如播放音频：
+```
+AudioExecutor audioExecutor = new AudioExecutor(this);
+audioExecutor.play("音频地址");
+```
+
+通常为防止内存泄露，会在Activity/Fragment的销毁方法中执行AudioExecutor的销毁事件：
+```
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    audioExecutor.destroy();
+}
+```
+
+## VisualizerView/AudioView（音频 - 音波图）
+VisualizerView是用来显示音频的傅立叶数据图，目前支持四种方式来显示音波图。
+
+**使用：**
+1. 在布局中添加VisualizerView：
+```
+<cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.view.VisualizerView
+    android:id="@+id/visualizerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+```
+2. 绑定VisualizerView，并执行AudioExecutor播放：
+```
+VisualizerView visualizerView = findViewById(R.id.visualizerView);
+// 第一种音波图，也是默认音波图
+visualizerView.addCircleRenderer();
+// 第一种音波图
+visualizerView.addBarGraphRenderers();
+// 第一种音波图
+visualizerView.addCircleBarRenderer();
+// 第一种音波图
+visualizerView.addLineRenderer();
+// 绑定AudioExecutor
+AudioExecutor audioExecutor = new AudioExecutor(this, visualizerView);
+// 播放音频
+audioExecutor.play("音频地址");
+```
+3. 注意事项：这里需要动态申请录音权限`android.permission.RECORD_AUDIO`，否则无法展示音频图。
+
+![猫客影音播放器音频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-14-195003.png)
+
