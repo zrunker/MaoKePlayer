@@ -23,7 +23,7 @@ import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
 
 /**
  * @program: ZMaoKePlayer
- * @description: 音频执行类
+ * @description: 音频执行类，需要动态申请录音权限，否则无法展示音频效果
  * @author: zoufengli01
  * @create: 2022/6/13 16:15
  **/
@@ -41,6 +41,15 @@ public class AudioExecutor {
 
     private VisualizerView visualizerView;
 
+    public AudioExecutor setVisualizerView(VisualizerView visualizerView) {
+        this.visualizerView = visualizerView;
+        if (visualizerView != null && !visualizerView.isAddRenderer()) {
+            // 添加默认Renderer
+            visualizerView.addCircleRenderer();
+        }
+        return this;
+    }
+
     public AudioExecutor(Context context) {
         this.context = context;
         init();
@@ -48,34 +57,32 @@ public class AudioExecutor {
 
     public AudioExecutor(Context context, VisualizerView visualizerView) {
         this.context = context;
-        this.visualizerView = visualizerView;
-        if (visualizerView != null && !visualizerView.isAddRenderer()) {
-            // 添加默认Renderer
-            visualizerView.addCircleRenderer();
-        }
+        setVisualizerView(visualizerView);
         init();
     }
 
     // 初始化
     private void init() {
-        this.initMKPlayer();
-        this.initVisualizer();
+        initMKPlayer();
+        initVisualizer();
         if (mkPlayer != null) {
             int audioSession = mkPlayer.getAudioSessionId();
-            acousticEchoCanceler = AcousticEchoCanceler.create(audioSession);
-            if (AcousticEchoCanceler.isAvailable() && acousticEchoCanceler != null) {
-                acousticEchoCanceler.setEnabled(true);
+            if (audioSession != 0) {
+                acousticEchoCanceler = AcousticEchoCanceler.create(audioSession);
+                if (AcousticEchoCanceler.isAvailable() && acousticEchoCanceler != null) {
+                    acousticEchoCanceler.setEnabled(true);
+                }
+                automaticGainControl = AutomaticGainControl.create(audioSession);
+                if (AutomaticGainControl.isAvailable() && automaticGainControl != null) {
+                    automaticGainControl.setEnabled(true);
+                }
+                noiseSuppressor = NoiseSuppressor.create(audioSession);
+                if (NoiseSuppressor.isAvailable() && noiseSuppressor != null) {
+                    noiseSuppressor.setEnabled(true);
+                }
+                bassBoost = new BassBoost(0, audioSession);
+                bassBoost.setStrength((short) 1000);
             }
-            automaticGainControl = AutomaticGainControl.create(audioSession);
-            if (AutomaticGainControl.isAvailable() && automaticGainControl != null) {
-                automaticGainControl.setEnabled(true);
-            }
-            noiseSuppressor = NoiseSuppressor.create(audioSession);
-            if (NoiseSuppressor.isAvailable() && noiseSuppressor != null) {
-                noiseSuppressor.setEnabled(true);
-            }
-            bassBoost = new BassBoost(0, audioSession);
-            bassBoost.setStrength((short) 1000);
         }
     }
 
