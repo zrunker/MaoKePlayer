@@ -67,7 +67,7 @@ public class AudioExecutor {
         initVisualizer();
         if (mkPlayer != null) {
             int audioSession = mkPlayer.getAudioSessionId();
-            if (audioSession != 0) {
+            try {
                 acousticEchoCanceler = AcousticEchoCanceler.create(audioSession);
                 if (AcousticEchoCanceler.isAvailable() && acousticEchoCanceler != null) {
                     acousticEchoCanceler.setEnabled(true);
@@ -82,6 +82,8 @@ public class AudioExecutor {
                 }
                 bassBoost = new BassBoost(0, audioSession);
                 bassBoost.setStrength((short) 1000);
+            } catch (Exception e) {
+                Log.e(TAG, "请检查录音权限");
             }
         }
     }
@@ -464,7 +466,7 @@ public class AudioExecutor {
                 visualizer.setEnabled(true);
             }
         } catch (Exception e) {
-            Log.d(TAG, "请检查录音权限");
+            Log.e(TAG, "请检查录音权限");
         }
     }
 
