@@ -200,7 +200,7 @@ public MKController getDefaultController() {
 
 ![猫客影音播放器视频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-10-153103.png)
 
-## AudioExecutor（音频执行类）
+## AudioExecutor（音频 - 执行类）
 AudioExecutor是专门针对于音频播放的封装类，它支持几乎所有常见的音频播放的操作API，例如播放音频：
 ```
 AudioExecutor audioExecutor = new AudioExecutor(this);
@@ -227,7 +227,7 @@ VisualizerView是用来显示音频的傅立叶数据图，目前支持四种方
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
 ```
-2. 绑定VisualizerView，并执行AudioExecutor播放，注意四种音波图选择一种即可，不选择取默认音波图效果：
+2. 绑定VisualizerView，并执行AudioExecutor播放，注意四种音波图选择一种即可，不选择将展示默认音波图效果：
 ```
 VisualizerView visualizerView = findViewById(R.id.visualizerView);
 // 第一种音波图，也是默认音波图
@@ -243,7 +243,7 @@ AudioExecutor audioExecutor = new AudioExecutor(this, visualizerView);
 // 播放音频
 audioExecutor.play("音频地址");
 ```
-3. 注意事项：这里需要动态申请录音权限`android.permission.RECORD_AUDIO`，否则无法展示音频图。
+3. 注意事项：Android 6.0+版本需要动态申请录音权限`android.permission.RECORD_AUDIO`，否则将无法展示音频图效果。
 
 ![猫客影音播放器音频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-14-195003.png)
 
