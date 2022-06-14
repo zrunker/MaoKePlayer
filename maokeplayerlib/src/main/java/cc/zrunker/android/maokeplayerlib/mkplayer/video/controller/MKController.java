@@ -1,4 +1,4 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.view.controller;
+package cc.zrunker.android.maokeplayerlib.mkplayer.video.controller;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,9 +28,9 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 
 import cc.zrunker.android.maokeplayerlib.R;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import cc.zrunker.android.maokeplayerlib.mkplayer.view.media.MKMediaView;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
+import cc.zrunker.android.maokeplayerlib.mkplayer.video.media.MKMediaView;
 
 /**
  * @program: ZMaoKePlayer
@@ -211,21 +211,21 @@ public class MKController extends FrameLayout implements View.OnClickListener {
 
                 }
             });
-            mkMediaView.addOnErrorListener(new MKErrorListener() {
+            mkMediaView.addOnErrorListener(new IMKListener.OnErrorListener() {
                 @Override
-                public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
+                public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
                     updatePausePlay(false);
                 }
             });
-            mkMediaView.addOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+            mkMediaView.addOnCompletionListener(new IMKListener.OnCompletionListener() {
                 @Override
-                public void onCompletion(IMediaPlayer iMediaPlayer) {
+                public void onCompletion(MKPlayer mkPlayer) {
                     updatePausePlay(false);
                 }
             });
-            mkMediaView.addOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+            mkMediaView.addOnPreparedListener(new IMKListener.OnPreparedListener() {
                 @Override
-                public void onPrepared(IMediaPlayer iMediaPlayer) {
+                public void onPrepared(MKPlayer mkPlayer) {
                     updatePausePlay(mkMediaView.isPlaying());
                     long duration = mkMediaView.getDuration();
                     tvTotalD.setText(longToTime(duration));

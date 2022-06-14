@@ -1,5 +1,6 @@
 package cc.zrunker.android.maokeplayerlib.mkplayer.core;
 
+import android.content.Context;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
@@ -52,6 +53,8 @@ public interface IMKPlayer {
      * @param path 资源路径
      */
     void prepareAsync(String path) throws IOException;
+
+//    void prepareAsync();
 
     /**
      * 设置呈现
@@ -126,4 +129,21 @@ public interface IMKPlayer {
      * 采样长宽比:num / den
      */
     int getVideoSarDen();
+
+    /**
+     * 获取Audio Session ID
+     */
+    int getAudioSessionId();
+
+    /**
+     * 设置唤醒模式
+     */
+    void setWakeMode(Context context, int level);
+
+//    void setDataSource(Context context, Uri uri) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+
+//    void setDataSource(Context context, Uri uri, Map<String, String> map) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+
+//    void setDataSource(String path) throws IOException, IllegalArgumentException, SecurityException, IllegalStateException;
+
 }

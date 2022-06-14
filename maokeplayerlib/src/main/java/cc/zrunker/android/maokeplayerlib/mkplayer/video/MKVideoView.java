@@ -1,18 +1,18 @@
-package cc.zrunker.android.maokeplayerlib.mkplayer.view;
+package cc.zrunker.android.maokeplayerlib.mkplayer.video;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import cc.zrunker.android.maokeplayerlib.R;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.ErrorTrans;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.MKErrorListener;
-import cc.zrunker.android.maokeplayerlib.mkplayer.view.controller.MKController;
-import cc.zrunker.android.maokeplayerlib.mkplayer.view.media.MKMediaView;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
+import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
+import cc.zrunker.android.maokeplayerlib.mkplayer.video.controller.MKController;
+import cc.zrunker.android.maokeplayerlib.mkplayer.video.media.MKMediaView;
 
 /**
  * @program: ZMaoKePlayer
@@ -24,6 +24,12 @@ public class MKVideoView extends FrameLayout {
     private final MKMediaView mkMediaView;
     private final ProgressBar progressCircular;
     private MKController defaultController;
+
+    private IMKListener.OnErrorListener mkErrorListener;
+
+    public MKController getDefaultController() {
+        return defaultController;
+    }
 
     public MKVideoView(Context context) {
         this(context, null);
@@ -77,43 +83,53 @@ public class MKVideoView extends FrameLayout {
      * @param path 视频地址
      */
     public void play(String path) {
-        progressCircular.setVisibility(VISIBLE);
-        mkMediaView.prepareAsync(path);
+        if (!TextUtils.isEmpty(path)) {
+            progressCircular.setVisibility(VISIBLE);
+            // 重置MKPlayer
+            mkMediaView.reset();
+            // 准备播放（异步）
+            mkMediaView.prepareAsync(path);
+        } else {
+            if (mkErrorListener != null) {
+                mkErrorListener.onError(null, 0, 0, "播放地址为空！");
+            }
+        }
     }
 
-    public MKVideoView setOnPreparedListener(IMediaPlayer.OnPreparedListener listener) {
-        mkMediaView.addOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+    public MKVideoView setOnPreparedListener(IMKListener.OnPreparedListener listener) {
+        mkMediaView.addOnPreparedListener(new IMKListener.OnPreparedListener() {
             @Override
-            public void onPrepared(IMediaPlayer iMediaPlayer) {
+            public void onPrepared(MKPlayer mkPlayer) {
                 progressCircular.setVisibility(GONE);
                 if (listener != null) {
-                    listener.onPrepared(iMediaPlayer);
+                    listener.onPrepared(mkPlayer);
                 }
             }
         });
         return this;
     }
 
-    public MKVideoView setOnErrorListener(MKErrorListener listener) {
-        mkMediaView.addOnErrorListener(new MKErrorListener() {
+    public MKVideoView setOnErrorListener(IMKListener.OnErrorListener listener) {
+        mkErrorListener = new IMKListener.OnErrorListener() {
             @Override
-            public void onError(IMediaPlayer iMediaPlayer, int what, int extra, String error) {
+            public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
                 progressCircular.setVisibility(GONE);
                 if (listener != null) {
-                    listener.onError(iMediaPlayer, what, extra, ErrorTrans.trans(what));
+                    listener.onError(mkPlayer, what, extra, error);
                 }
             }
-        });
+        };
+        mkMediaView.addOnErrorListener(mkErrorListener);
         return this;
     }
 
-    public MKVideoView setOnCompletionListener(IMediaPlayer.OnCompletionListener listener) {
-        mkMediaView.addOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+    public MKVideoView setOnCompletionListener(IMKListener.OnCompletionListener listener) {
+        mkMediaView.addOnCompletionListener(new IMKListener.OnCompletionListener() {
             @Override
-            public void onCompletion(IMediaPlayer iMediaPlayer) {
+            public void onCompletion(MKPlayer mkPlayer) {
                 progressCircular.setVisibility(GONE);
                 if (listener != null) {
-                    listener.onCompletion(iMediaPlayer);
+                    listener.onCompletion(mkPlayer);
                 }
             }
         });

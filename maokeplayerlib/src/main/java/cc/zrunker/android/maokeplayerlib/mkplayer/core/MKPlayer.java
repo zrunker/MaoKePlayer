@@ -1,5 +1,6 @@
 package cc.zrunker.android.maokeplayerlib.mkplayer.core;
 
+import android.content.Context;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,10 @@ public class MKPlayer implements IMKPlayer {
         return mkOption;
     }
 
+    public IMediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     public MKPlayer() {
         createPlayer();
     }
@@ -47,7 +52,7 @@ public class MKPlayer implements IMKPlayer {
             // 重新赋值
             mediaPlayer = ijkMediaPlayer;
             // 设置监听
-            mkListener = new MKListener(mediaPlayer);
+            mkListener = new MKListener(this);
         }
     }
 
@@ -230,4 +235,20 @@ public class MKPlayer implements IMKPlayer {
         }
         return 0;
     }
+
+    @Override
+    public int getAudioSessionId() {
+        if (mediaPlayer != null) {
+            return mediaPlayer.getAudioSessionId();
+        }
+        return 0;
+    }
+
+    @Override
+    public void setWakeMode(Context context, int level) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setWakeMode(context, level);
+        }
+    }
+
 }
