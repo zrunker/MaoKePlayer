@@ -216,7 +216,7 @@ protected void onDestroy() {
 }
 ```
 
-## VisualizerView/AudioView（音频 - 音波图）
+## VisualizerView（音频 - 音波图）
 VisualizerView是用来显示音频的傅立叶数据图，目前支持四种音波效果图。
 
 **使用：**
@@ -247,3 +247,5 @@ audioExecutor.play("音频地址");
 
 ![猫客影音播放器音频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-14-195003.png)
 
+推荐阅读：
+1. https://github.com/zrunker/ZLameMp3
