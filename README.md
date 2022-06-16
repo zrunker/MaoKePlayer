@@ -264,9 +264,10 @@ audioExecutor.play("音频地址");
 
 ![猫客影音播放器音频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_ijk/device-2022-06-14-195003.png)
 
-![阅读原文](http://ibooker.cc/article/356/detail)
+[阅读原文](http://ibooker.cc/article/356/detail)
 
 推荐阅读：
 1. https://github.com/zrunker/ZLameMp3
 2. http://ibooker.cc/article/355/detail
 3. https://github.com/zrunker/ZMediaPlayer
+
