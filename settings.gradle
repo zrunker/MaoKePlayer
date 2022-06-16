@@ -1,2 +1,2 @@
 include ':app', ':zmaokeplayerlib'
-rootProject.name='ZMaoKePlayer'
+rootProject.name='MaoKePlayer'

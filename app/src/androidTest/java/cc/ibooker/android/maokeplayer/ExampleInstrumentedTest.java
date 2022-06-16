@@ -1,4 +1,4 @@
-package cc.ibooker.android.zmaokeplayer;
+package cc.ibooker.android.maokeplayer;
 
 import android.content.Context;
 
