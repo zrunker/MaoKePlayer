@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "cc.zrunker.android.zmaokeplayer"
+        applicationId "cc.zrunker.android.maokeplayer"
         minSdkVersion 16
         targetSdkVersion 31
         versionCode 1
