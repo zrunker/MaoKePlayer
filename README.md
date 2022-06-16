@@ -3,6 +3,23 @@
 - 支持AVI、WMV、MPEG、MP4、M4V、MOV、ASF、FLV、F4V、RMVB、RM、3GP、VOB等视频格式。
 - 支持CD、WAVE、AIFF、MPEG、MP3、MPEG-4、MIDI、WMA、RealAudio、VQF、OggVorbis、AMR、APE、FLAC等音频格式。
 
+## 引入MaoKePlayer插件
+1. 在根gradle文件中引入jitpack仓库：
+```
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
+2. 在工程gradle文件中引入MaoKePlayer插件
+```
+dependencies {
+	implementation 'com.github.zrunker:ZMaoKePlayer:1.0'
+}
+```
+
 ## MKPlayer
 MKPlayer媒体播放实现类，继承自IMKPlayer，用来对外提供了音视频播放、设置等一系列API，如：
 ```
