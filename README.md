@@ -7,16 +7,16 @@
 1. 在根gradle文件中引入jitpack仓库：
 ```
 allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
 }
 ```
 2. 在工程gradle文件中引入MaoKePlayer插件
 ```
 dependencies {
-	implementation 'com.github.zrunker:MaoKePlayer:1.0'
+    implementation 'com.github.zrunker:MaoKePlayer:1.0'
 }
 ```
 
