@@ -267,3 +267,4 @@ audioExecutor.play("音频地址");
 推荐阅读：
 1. https://github.com/zrunker/ZLameMp3
 2. http://ibooker.cc/article/355/detail
+3. https://github.com/zrunker/ZMediaPlayer
