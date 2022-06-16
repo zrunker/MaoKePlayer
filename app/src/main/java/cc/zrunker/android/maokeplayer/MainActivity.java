@@ -1,4 +1,4 @@
-package cc.zrunker.android.zmaokeplayer;
+package cc.zrunker.android.maokeplayer;
 
 import android.os.Bundle;
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         visualizerView.addCircleRenderer();
         visualizerView.addLineRenderer();
         audioExecutor = new AudioExecutor(this, visualizerView);
-        audioExecutor.play("https://s33.aconvert.com/convert/p3r68-cdx67/yehlm-ar2ff.mp3");
+        audioExecutor.play("https://s19.aconvert.com/convert/p3r68-cdx67/zkbt4-uofws.mp3");
 
     }
 

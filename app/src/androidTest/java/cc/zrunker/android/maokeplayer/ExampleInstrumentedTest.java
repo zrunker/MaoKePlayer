@@ -1,4 +1,4 @@
-package cc.zrunker.android.zmaokeplayer;
+package cc.zrunker.android.maokeplayer;
 
 import android.content.Context;
 
