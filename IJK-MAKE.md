@@ -56,6 +56,7 @@ https://gitee.com/ibooker/FFmpeg.git
 ```
 
 ### NDK编译：
+使用NDK编译执行如下内容，即可在本地目录下生成相应的so库：
 ```
 ./init-android.sh
 ./init-android-openssl.sh
