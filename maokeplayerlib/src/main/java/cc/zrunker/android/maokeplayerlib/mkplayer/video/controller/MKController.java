@@ -72,8 +72,9 @@ public class MKController extends FrameLayout implements View.OnClickListener {
                 long cPosition = mkController.mkMediaView.getCurrentPosition();
                 mkController.tvCurrentD.setText(mkController.longToTime(cPosition));
                 mkController.sbProgress.setProgress((int) cPosition);
-                if (mkController.mkMediaView.isPlaying()
-                        && cPosition < mkController.sbProgress.getMax()) {
+                if ((mkController.mkMediaView.isPlaying()
+                        && cPosition < mkController.sbProgress.getMax())
+                        || mkController.mkMediaView.isLooping()) {
                     mkController.executeUpdateUiHandler();
                 }
             }
