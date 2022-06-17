@@ -270,4 +270,5 @@ audioExecutor.play("音频地址");
 1. https://github.com/zrunker/ZLameMp3
 2. http://ibooker.cc/article/355/detail
 3. https://github.com/zrunker/ZMediaPlayer
+4. https://github.com/zrunker/MaoKePlayer/blob/v_1.0_media/README.md
 
