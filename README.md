@@ -36,6 +36,9 @@ videoView.setMediaController(new MediaController(this));
 videoView.setVideoPath("视频地址");
 ```
 
+![猫客影音播放器视频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_media/device-2022-06-17-163225.png)
+
+
 ## 音频播放 - MediaPlayerExecutor
 MediaPlayerExecutor对MediaPlayer进行了封装，并且对音频属性做了一些调整，只需要如下两步就能实现音频播放：
 ```
@@ -50,8 +53,6 @@ protected void onDestroy() {
     mediaPlayerExecutor.destroy();
 }
 ```
-
-![猫客影音播放器视频效果图](https://github.com/zrunker/ZMaoKePlayer/blob/v_1.0_media/device-2022-06-17-163225.png)
 
 ## 音频播放 - 音波图 - VisualizerView
 VisualizerView是用来显示音频的傅立叶数据图，目前支持四种音波效果图。
