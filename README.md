@@ -66,7 +66,7 @@ VisualizerView是用来显示音频的傅立叶数据图，目前支持四种音
 ```
 2. 绑定VisualizerView，并执行MediaPlayerExecutor播放，注意四种音波图选择一种即可：
 ```
-VisualizerView visualizerView = findViewById(R.id.visualizerView);
+final VisualizerView visualizerView = findViewById(R.id.visualizerView);
 // 第一种音波图
 visualizerView.addCircleRenderer();
 // 第二种音波图
