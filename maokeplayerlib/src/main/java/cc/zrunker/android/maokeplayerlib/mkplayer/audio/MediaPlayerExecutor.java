@@ -3,11 +3,13 @@ package cc.zrunker.android.maokeplayerlib.mkplayer.audio;
 import android.content.Context;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.audiofx.AcousticEchoCanceler;
 import android.media.audiofx.AutomaticGainControl;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.NoiseSuppressor;
 import android.media.audiofx.Visualizer;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.PowerManager;
@@ -15,11 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.IOException;
-
-import cc.zrunker.android.maokeplayerlib.mkplayer.audio.visualizer.view.VisualizerView;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.MKPlayer;
-import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
 
 /**
  * @program: ZMaoKePlayer
@@ -27,10 +24,10 @@ import cc.zrunker.android.maokeplayerlib.mkplayer.core.listener.IMKListener;
  * @author: zoufengli01
  * @create: 2022/6/13 16:15
  **/
-public class AudioExecutor {
-    private final String TAG = AudioExecutor.class.getSimpleName();
+public class MediaPlayerExecutor {
+    private final String TAG = MediaPlayerExecutor.class.getSimpleName();
     private final Context context;
-    private MKPlayer mkPlayer;
+    private MediaPlayer mediaPlayer;
     private AudioManager audioManager;
     private WifiManager.WifiLock wifiLock;
     private Visualizer visualizer;// 音频波形图
@@ -39,60 +36,43 @@ public class AudioExecutor {
     private NoiseSuppressor noiseSuppressor;// 噪音抑制器
     private BassBoost bassBoost;// 重低音调节器
 
-    private VisualizerView visualizerView;
-
-    public AudioExecutor setVisualizerView(VisualizerView visualizerView) {
-        this.visualizerView = visualizerView;
-        if (visualizerView != null && !visualizerView.isAddRenderer()) {
-            // 添加默认Renderer
-            visualizerView.addCircleRenderer();
-        }
-        return this;
+    public static synchronized MediaPlayerExecutor create(Context context) {
+        return new MediaPlayerExecutor(context.getApplicationContext());
     }
 
-    public AudioExecutor(Context context) {
+    private MediaPlayerExecutor(Context context) {
         this.context = context;
-        init();
-    }
-
-    public AudioExecutor(Context context, VisualizerView visualizerView) {
-        this.context = context;
-        setVisualizerView(visualizerView);
         init();
     }
 
     // 初始化
     private void init() {
-        initMKPlayer();
-        initVisualizer();
-        if (mkPlayer != null) {
-            int audioSession = mkPlayer.getAudioSessionId();
+        this.initMediaPlayer();
+        this.initVisualizer();
+        if (mediaPlayer != null) {
+            int audioSession = mediaPlayer.getAudioSessionId();
             try {
                 acousticEchoCanceler = AcousticEchoCanceler.create(audioSession);
-                if (AcousticEchoCanceler.isAvailable() && acousticEchoCanceler != null) {
+                if (AcousticEchoCanceler.isAvailable() && acousticEchoCanceler != null)
                     acousticEchoCanceler.setEnabled(true);
-                }
                 automaticGainControl = AutomaticGainControl.create(audioSession);
-                if (AutomaticGainControl.isAvailable() && automaticGainControl != null) {
+                if (AutomaticGainControl.isAvailable() && automaticGainControl != null)
                     automaticGainControl.setEnabled(true);
-                }
                 noiseSuppressor = NoiseSuppressor.create(audioSession);
-                if (NoiseSuppressor.isAvailable() && noiseSuppressor != null) {
+                if (NoiseSuppressor.isAvailable() && noiseSuppressor != null)
                     noiseSuppressor.setEnabled(true);
-                }
                 bassBoost = new BassBoost(0, audioSession);
                 bassBoost.setStrength((short) 1000);
             } catch (Exception e) {
-                Log.e(TAG, "请检查录音权限");
+                Log.e(TAG, "请检查录音权限！" + e.getMessage());
             }
         }
     }
 
     // 获取AudioManager
-    private AudioManager getAudioManager() {
-        if (audioManager == null) {
+    public AudioManager getAudioManager() {
+        if (audioManager == null)
             audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        }
         return audioManager;
     }
 
@@ -102,9 +82,8 @@ public class AudioExecutor {
     }
 
     public int getStreamVolume(int streamType) {
-        if (audioManager != null) {
+        if (audioManager != null)
             return audioManager.getStreamVolume(streamType);
-        }
         return 0;
     }
 
@@ -114,9 +93,8 @@ public class AudioExecutor {
     }
 
     public int getStreamMaxVolume(int streamType) {
-        if (audioManager != null) {
+        if (audioManager != null)
             return audioManager.getStreamMaxVolume(streamType);
-        }
         return 0;
     }
 
@@ -127,31 +105,28 @@ public class AudioExecutor {
      * @param index      大小
      * @param flags      种类-特征
      */
-    public AudioExecutor setStreamVolume(int streamType, int index, int flags) {
-        if (audioManager != null) {
+    public MediaPlayerExecutor setStreamVolume(int streamType, int index, int flags) {
+        if (audioManager != null)
             audioManager.setStreamVolume(streamType, index, flags);
-        }
         return this;
     }
 
     // 开始播放
-    public AudioExecutor start() {
-        if (mkPlayer != null) {
-            mkPlayer.start();
-        }
+    public MediaPlayerExecutor start() {
+        if (mediaPlayer != null)
+            mediaPlayer.start();
         initVisualizer();
         return this;
     }
 
     // 重置
-    public AudioExecutor reset() {
-        if (mkPlayer != null) {
-            mkPlayer.pause();
-            mkPlayer.stop();
-            mkPlayer.reset();
-            if (visualizer != null) {
+    public MediaPlayerExecutor reset() {
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            if (visualizer != null)
                 visualizer.setEnabled(true);
-            }
         }
         return this;
     }
@@ -161,101 +136,103 @@ public class AudioExecutor {
      *
      * @param msec 毫秒数
      */
-    public AudioExecutor seekTo(int msec) {
-        if (mkPlayer != null) {
-            mkPlayer.seekTo(msec);
-        }
+    public MediaPlayerExecutor seekTo(int msec) {
+        if (mediaPlayer != null)
+            mediaPlayer.seekTo(msec);
         return this;
     }
 
     // 获取音频总时长
-    public long getDuration() {
-        if (mkPlayer != null) {
-            return mkPlayer.getDuration();
-        }
+    public int getDuration() {
+        if (mediaPlayer != null)
+            return mediaPlayer.getDuration();
         return 0;
     }
 
     // 获取音频当前进度
-    public long getCurrentPosition() {
-        if (mkPlayer != null) {
-            return mkPlayer.getCurrentPosition();
-        }
+    public int getCurrentPosition() {
+        if (mediaPlayer != null)
+            return mediaPlayer.getCurrentPosition();
         return 0;
     }
 
     // 是否正在播放
     public boolean isPlaying() {
-        return mkPlayer != null && mkPlayer.isPlaying();
+        return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
     // 播放1
-    public AudioExecutor play(String url) {
+    public MediaPlayerExecutor play(String url) {
         if (!TextUtils.isEmpty(url)) {
-            // 开启播放
-            if (mkPlayer == null) {
-                init();
+            Uri uri = Uri.parse(url);
+            play(uri);
+        }
+        return this;
+    }
+
+    // 播放2
+    public MediaPlayerExecutor play(Uri uri) {
+        try {
+            if (uri != null) {
+                // 开启播放
+                if (mediaPlayer == null)
+                    init();
+                // 重置mediaPlayer
+                mediaPlayer.reset();
+                // 重新加载音频资源
+                mediaPlayer.setDataSource(context, uri);
+                // 准备播放（异步）
+                mediaPlayer.prepareAsync();
             }
-            // 重置MKPlayer
-            mkPlayer.reset();
-            // 准备播放（异步）
-            try {
-                mkPlayer.prepareAsync(url);
-            } catch (IOException e) {
-                e.printStackTrace();
-                if (mkPlayerListener != null) {
-                    mkPlayerListener.onError(mkPlayer, 0, 0, e.getMessage());
-                }
-            }
-        } else {
-            if (mkPlayerListener != null) {
-                mkPlayerListener.onError(mkPlayer, 0, 0, "播放地址为空！");
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (mediaPlayerListener != null)
+                mediaPlayerListener.onError(mediaPlayer, 0, 0);
         }
         return this;
     }
 
     // 暂停
-    public AudioExecutor pause() {
-        if (mkPlayer != null) {
-            mkPlayer.pause();
-        }
+    public MediaPlayerExecutor pause() {
+        if (mediaPlayer != null)
+            mediaPlayer.pause();
         return this;
     }
 
     // 停止
-    public AudioExecutor stop() {
-        if (mkPlayer != null) {
-            mkPlayer.stop();
-        }
+    public MediaPlayerExecutor stop() {
+        if (mediaPlayer != null)
+            mediaPlayer.stop();
         return this;
     }
 
     // 销毁
     public void destroy() {
-        if (mkPlayer != null) {
-            mkPlayer.pause();
-            mkPlayer.stop();
-            mkPlayer.reset();
-            mkPlayer.release();
-            mkPlayer = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            mediaPlayer.release();
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    mediaPlayer.releaseDrm();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mediaPlayer = null;
         }
         if (wifiLock != null) {
             wifiLock.release();
             wifiLock = null;
         }
-        if (acousticEchoCanceler != null) {
+        if (acousticEchoCanceler != null)
             acousticEchoCanceler.release();
-        }
-        if (automaticGainControl != null) {
+        if (automaticGainControl != null)
             automaticGainControl.release();
-        }
-        if (noiseSuppressor != null) {
+        if (noiseSuppressor != null)
             noiseSuppressor.release();
-        }
-        if (bassBoost != null) {
+        if (bassBoost != null)
             bassBoost.release();
-        }
         visualizerDestroy();
     }
 
@@ -267,21 +244,21 @@ public class AudioExecutor {
         }
     }
 
-    // 初始化MKPlayer
-    private void initMKPlayer() {
-        if (mkPlayer == null) {
-            mkPlayer = new MKPlayer();
-        }
+    // 初始化MediaPlayer
+    private void initMediaPlayer() {
+        if (mediaPlayer == null)
+            mediaPlayer = new MediaPlayer();
+
         // 设置音量，参数分别表示左右声道声音大小，取值范围为0~1
-        mkPlayer.setVolume(0.5f, 0.5f);
+        mediaPlayer.setVolume(0.5f, 0.5f);
 
         // 设置是否循环播放
-        mkPlayer.setLooping(false);
+        mediaPlayer.setLooping(false);
 
         // 设置设备进入锁状态模式-可在后台播放或者缓冲音乐-CPU一直工作
-        mkPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+        mediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
         // 当播放的时候一直让屏幕变亮
-        mkPlayer.setScreenOnWhilePlaying(true);
+        mediaPlayer.setScreenOnWhilePlaying(true);
 
         // 如果你使用wifi播放流媒体，你还需要持有wifi锁
         WifiManager wifiManager = ((WifiManager) context.getApplicationContext()
@@ -315,60 +292,57 @@ public class AudioExecutor {
         }
 
         // 设置播放错误监听
-        mkPlayer.getMkListener().setOnErrorListener(new IMKListener.OnErrorListener() {
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
-            public void onError(MKPlayer mkPlayer, int what, int extra, String error) {
-                if (mkPlayerListener != null) {
-                    mkPlayerListener.onError(mkPlayer, what, extra, error);
-                }
-                mkPlayer.pause();
-                mkPlayer.stop();
-                mkPlayer.reset();
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                if (mediaPlayerListener != null)
+                    mediaPlayerListener.onError(mediaPlayer, i, i1);
+                mediaPlayer.pause();
+                mediaPlayer.stop();
+                mediaPlayer.reset();
+                return false;
             }
         });
 
         // 设置播放完成监听
-        mkPlayer.getMkListener().setOnCompletionListener(new IMKListener.OnCompletionListener() {
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void onCompletion(MKPlayer mkPlayer) {
+            public void onCompletion(MediaPlayer mediaPlayer) {
                 if (visualizer != null)
                     visualizer.setEnabled(false);
-                if (mkPlayerListener != null)
-                    mkPlayerListener.onCompletion(mkPlayer);
+                if (mediaPlayerListener != null)
+                    mediaPlayerListener.onCompletion(mediaPlayer);
             }
         });
 
         // 异步准备Prepared完成监听
-        mkPlayer.getMkListener().setOnPreparedListener(new IMKListener.OnPreparedListener() {
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
-            public void onPrepared(MKPlayer mkPlayer) {
-                if (mkPlayerListener != null) {
-                    mkPlayerListener.onPrepared(mkPlayer);
-                }
-                mkPlayer.start();
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                if (mediaPlayerListener != null)
+                    mediaPlayerListener.onPrepared(mediaPlayer);
+                mediaPlayer.start();
                 initVisualizer();
             }
         });
 
         // 进度调整完成SeekComplete监听
-        mkPlayer.getMkListener().setOnSeekCompleteListener(new IMKListener.OnSeekCompleteListener() {
+        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
-            public void onSeekComplete(MKPlayer mkPlayer) {
-                if (mkPlayerListener != null) {
-                    mkPlayerListener.onSeekComplete(mkPlayer);
-                }
+            public void onSeekComplete(MediaPlayer mediaPlayer) {
+                if (mediaPlayerListener != null)
+                    mediaPlayerListener.onSeekComplete(mediaPlayer);
             }
         });
 
         // 网络流媒体缓冲监听
-        mkPlayer.getMkListener().setOnBufferingUpdateListener(new IMKListener.OnBufferingUpdateListener() {
+        mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
-            public void onBufferingUpdate(MKPlayer mkPlayer, int progress) {
+            public void onBufferingUpdate(MediaPlayer mediaPlayer, int progress) {
                 // i 0~100
                 Log.d(TAG, "缓存进度" + progress + "%");
-                if (mkPlayerListener != null) {
-                    mkPlayerListener.onBufferingUpdate(mkPlayer, progress);
-                }
+                if (mediaPlayerListener != null)
+                    mediaPlayerListener.onBufferingUpdate(mediaPlayer, progress);
             }
         });
     }
@@ -376,42 +350,38 @@ public class AudioExecutor {
     private final AudioManager.OnAudioFocusChangeListener focusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
-            if (mkPlayer == null) {
+            if (mediaPlayer == null)
                 init();
-            }
             switch (focusChange) {
                 case AudioManager.AUDIOFOCUS_GAIN:
                     // 获取audio focus
-                    if (mkPlayer == null) {
-                        mkPlayer = new MKPlayer();
-                    } else if (!mkPlayer.isPlaying()) {
-                        mkPlayer.start();
+                    if (mediaPlayer == null)
+                        mediaPlayer = new MediaPlayer();
+                    else if (!mediaPlayer.isPlaying()) {
+                        mediaPlayer.start();
                         initVisualizer();
                     }
-                    mkPlayer.setVolume(1.0f, 1.0f);
+                    mediaPlayer.setVolume(1.0f, 1.0f);
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS:
                     // 失去audio focus很长一段时间，必须停止所有的audio播放，清理资源
-                    if (mkPlayer != null) {
-                        if (mkPlayer.isPlaying()) {
-                            mkPlayer.stop();
-                        }
-                        mkPlayer.reset();
-                        mkPlayer.release();
-                        mkPlayer = null;
+                    if (mediaPlayer != null) {
+                        if (mediaPlayer.isPlaying())
+                            mediaPlayer.stop();
+                        mediaPlayer.reset();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
                     }
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                     // 暂时失去audio focus，但是很快就会重新获得，在此状态应该暂停所有音频播放，但是不能清除资源
-                    if (mkPlayer.isPlaying()) {
-                        mkPlayer.pause();
-                    }
+                    if (mediaPlayer.isPlaying())
+                        mediaPlayer.pause();
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                     // 暂时失去 audio focus，但是允许持续播放音频(以很小的声音)，不需要完全停止播放。
-                    if (mkPlayer.isPlaying()) {
-                        mkPlayer.setVolume(0.1f, 0.1f);
-                    }
+                    if (mediaPlayer.isPlaying())
+                        mediaPlayer.setVolume(0.1f, 0.1f);
                     break;
             }
         }
@@ -423,34 +393,26 @@ public class AudioExecutor {
         // 音频数据
         @Override
         public void onWaveFormDataCapture(Visualizer visualizer, final byte[] waveform, int samplingRate) {
-            if (visualizerView != null) {
-                visualizerView.updateVisualizer(waveform);
-            }
-            if (mkPlayerListener != null) {
-                mkPlayerListener.onWaveFormDataCapture(visualizer, waveform, samplingRate);
-            }
+            if (mediaPlayerListener != null)
+                mediaPlayerListener.onWaveFormDataCapture(visualizer, waveform, samplingRate);
         }
 
         // 傅里叶数据
         @Override
         public void onFftDataCapture(Visualizer visualizer, final byte[] fft, int samplingRate) {
-            if (visualizerView != null) {
-                visualizerView.updateVisualizerFFT(fft);
-            }
-            if (mkPlayerListener != null) {
-                mkPlayerListener.onFftDataCapture(visualizer, fft, samplingRate);
-            }
+            if (mediaPlayerListener != null)
+                mediaPlayerListener.onFftDataCapture(visualizer, fft, samplingRate);
         }
     };
 
     /**
      * 初始化Visualizer
      */
-    private void initVisualizer() {
+    public void initVisualizer() {
         try {
-            if (mkPlayer != null) {
+            if (mediaPlayer != null) {
                 visualizerDestroy();
-                visualizer = new Visualizer(mkPlayer.getAudioSessionId());
+                visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
 
                 /*
                  *可视化数据的大小：
@@ -466,31 +428,31 @@ public class AudioExecutor {
                 visualizer.setEnabled(true);
             }
         } catch (Exception e) {
-            Log.e(TAG, "请检查录音权限");
+            Log.e(TAG, "请检查录音权限！" + e.getMessage());
         }
     }
 
-    // 对外监听接口
-    public interface MKPlayerListener {
-        boolean onError(MKPlayer mkPlayer, int i, int i1, String error);
+    // 监听接口
+    public interface MediaPlayerListener {
+        boolean onError(MediaPlayer mediaPlayer, int i, int i1);
 
-        void onCompletion(MKPlayer mkPlayer);
+        void onCompletion(MediaPlayer mediaPlayer);
 
-        void onPrepared(MKPlayer mkPlayer);
+        void onPrepared(MediaPlayer mediaPlayer);
 
-        void onSeekComplete(MKPlayer mkPlayer);
+        void onSeekComplete(MediaPlayer mediaPlayer);
 
-        void onBufferingUpdate(MKPlayer mkPlayer, int i);
+        void onBufferingUpdate(MediaPlayer mediaPlayer, int i);
 
         void onFftDataCapture(Visualizer visualizer, final byte[] fft, int samplingRate);
 
         void onWaveFormDataCapture(Visualizer visualizer, final byte[] waveform, int samplingRate);
     }
 
-    private MKPlayerListener mkPlayerListener;
+    private MediaPlayerListener mediaPlayerListener;
 
-    public AudioExecutor setMkPlayerListener(MKPlayerListener mkPlayerListener) {
-        this.mkPlayerListener = mkPlayerListener;
+    public MediaPlayerExecutor setMediaPlayerListener(MediaPlayerListener mediaPlayerListener) {
+        this.mediaPlayerListener = mediaPlayerListener;
         return this;
     }
 }
