@@ -1,8 +1,8 @@
 # MaoKePlayer
-使用MediaPlayer执行音视频播放，MediaPlayer是Android系统自带的视频播放器插件，目前对MP4和MP3兼容性最好
+使用MediaPlayer执行音视频播放，MediaPlayer是Android系统自带的视频播放器插件，目前对MP4和MP3兼容性最好。
 
 ## 视频播放 - VideoView
-VideoView是Android系统自带控件，内部包装了MediaPlayer，另外VideoView支持绑定视频播放控制器，所以VideoView能够很简单的实现视频播放
+VideoView是Android系统自带控件，内部包装了MediaPlayer，另外VideoView支持绑定视频播放控制器，所以VideoView能够很简单的实现视频播放。
 
 **使用：**
 1. 将VideoView添加到布局文件：
