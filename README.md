@@ -20,7 +20,7 @@ dependencies {
 }
 ```
 
-## MKPlayer
+## MKPlayer（核心类）
 MKPlayer媒体播放实现类，继承自IMKPlayer，用来对外提供了音视频播放、设置等一系列API，如：
 ```
 public interface IMKPlayer {
