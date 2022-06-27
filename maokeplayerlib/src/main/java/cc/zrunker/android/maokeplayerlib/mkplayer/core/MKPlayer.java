@@ -71,6 +71,7 @@ public class MKPlayer implements IMKPlayer {
             mkOption.isEnableAccurateSeek(true);
             mkOption.isPacketBuffering(false);
             mkOption.maxBufferSize(10240L);
+            mkOption.dnsCacheClear(true);
         }
     }
 
