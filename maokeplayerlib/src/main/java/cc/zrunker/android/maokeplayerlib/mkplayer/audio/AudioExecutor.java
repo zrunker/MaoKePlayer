@@ -189,7 +189,7 @@ public class AudioExecutor {
         return mkPlayer != null && mkPlayer.isPlaying();
     }
 
-    // 播放1
+    // 播放
     public AudioExecutor play(String url) {
         if (!TextUtils.isEmpty(url)) {
             // 开启播放
