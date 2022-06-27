@@ -196,8 +196,8 @@ public class AudioExecutor {
             if (mkPlayer == null) {
                 init();
             }
-            // 重置MKPlayer
-            mkPlayer.reset();
+//            // 重置MKPlayer
+//            mkPlayer.reset();
             // 准备播放（异步）
             try {
                 mkPlayer.prepareAsync(url);
