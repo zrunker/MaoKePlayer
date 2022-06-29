@@ -1,6 +1,7 @@
 package cc.zrunker.android.maokeplayerlib.mkplayer.video.media;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.text.TextUtils;
@@ -87,8 +88,51 @@ public class MKMediaView extends SurfaceView
         mkPlayer = new MKPlayer();
     }
 
+    // 设置SurfaceView大小
+    public void changeSurfaceSize() {
+        if (isAutoSize && mkPlayer != null) {
+            // 获取SurfaceView的宽高
+            int surfaceWidth, surfaceHeight;
+            if (getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                surfaceWidth = getWidth();
+                surfaceHeight = getHeight();
+            } else {
+                surfaceWidth = getHeight();
+                surfaceHeight = getWidth();
+            }
+            if (surfaceWidth == 0 || surfaceHeight == 0) {
+                return;
+            }
+
+            // 获取视频宽高
+            int videoWidth = mkPlayer.getVideoWidth();
+            int videoHeight = mkPlayer.getVideoHeight();
+            if (videoWidth == 0 || videoHeight == 0) {
+                return;
+            }
+
+            // 根据视频尺寸去计算->视频可以在SurfaceView中放大的最大倍数
+            float max;
+            if (getResources().getConfiguration().orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                // 竖屏模式下按视频宽度计算放大倍数值
+                max = Math.max((float) videoWidth / (float) surfaceWidth, (float) videoHeight / (float) surfaceHeight);
+            } else {
+                // 横屏模式下按视频高度计算放大倍数值
+                max = Math.max(((float) videoWidth / (float) surfaceHeight), (float) videoHeight / (float) surfaceWidth);
+            }
+
+            // 视频宽高分别/最大倍数值 计算出放大后的视频尺寸
+            videoWidth = (int) Math.ceil((float) videoWidth / max);
+            videoHeight = (int) Math.ceil((float) videoHeight / max);
+
+            // 无法直接设置视频尺寸，将计算出的视频尺寸设置到surfaceView，让视频自动填充
+            getHolder().setFixedSize(videoWidth, videoHeight);
+        }
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        // 启动播放
         isCanPlay = true;
         requestFocus();
         setDisplay(holder);
@@ -108,6 +152,8 @@ public class MKMediaView extends SurfaceView
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        changeSurfaceSize();
+        // 执行回调
         for (SurfaceHolder.Callback item : holderCallBackSet) {
             if (item != null) {
                 item.surfaceChanged(holder, format, width, height);
@@ -306,12 +352,8 @@ public class MKMediaView extends SurfaceView
             mkPlayer.getMkListener().setOnPreparedListener(new IMKListener.OnPreparedListener() {
                 @Override
                 public void onPrepared(MKPlayer mkPlayer) {
-                    // 设置SurfaceView大小
-                    if (isAutoSize) {
-                        int width = mkPlayer.getVideoWidth();
-                        int height = mkPlayer.getVideoHeight();
-                        getHolder().setFixedSize(width, height);
-                    }
+                    changeSurfaceSize();
+                    // 执行回调
                     for (IMKListener.OnPreparedListener item : onPreparedListenerSet) {
                         if (item != null) {
                             item.onPrepared(mkPlayer);
